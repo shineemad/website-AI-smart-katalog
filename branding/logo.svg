@@ -1,0 +1,14 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="280" height="64" viewBox="0 0 280 64">
+  <!-- KATALIS.AI full logo: mark + wordmark -->
+  <rect width="64" height="64" rx="14" fill="#1916B0"/>
+  <rect x="14" y="24" width="4.5" height="16" rx="2.25" fill="#FFFFFF" opacity="0.85"/>
+  <rect x="22.5" y="17" width="4.5" height="30" rx="2.25" fill="#FFFFFF"/>
+  <rect x="31" y="10" width="4.5" height="44" rx="2.25" fill="#7CB1FF"/>
+  <rect x="39.5" y="17" width="4.5" height="30" rx="2.25" fill="#FFFFFF"/>
+  <rect x="48" y="24" width="4.5" height="16" rx="2.25" fill="#FFFFFF" opacity="0.85"/>
+  <!-- wordmark -->
+  <text x="78" y="44" font-family="Archivo, 'Archivo Expanded', sans-serif" font-size="30" font-weight="650" letter-spacing="-0.5" fill="#1F1F25">KATALIS</text>
+  <!-- .AI badge (pola rotating-word box) -->
+  <rect x="216" y="18" width="42" height="28" rx="7" fill="#EAF0FD" stroke="#2F64ED" stroke-width="1.5"/>
+  <text x="237" y="37.5" text-anchor="middle" font-family="'Fragment Mono', 'IBM Plex Mono', monospace" font-size="14" font-weight="400" letter-spacing="1" fill="#1916B0">AI</text>
+</svg>

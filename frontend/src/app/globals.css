@@ -1,0 +1,174 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --ink: #1f1f25;
+  --gray: #606073;
+  --blue-deep: #1916b0;
+  --blue-electric: #2f64ed;
+  --bg-soft: #f5f5fa;
+  --lavender: #e0e0eb;
+  --blue-tint: #eaf0fd;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+body {
+  color: var(--ink);
+  background: #ffffff;
+  font-feature-settings: "tnum";
+}
+
+/* ---------- Signature: eyebrow barcode ---------- */
+.eyebrow-bars::before,
+.eyebrow-bars::after {
+  content: "|||||";
+  letter-spacing: 0.08em;
+  opacity: 0.45;
+}
+
+/* ---------- Reveal on scroll (dipicu IntersectionObserver via .is-inview) ---------- */
+.reveal {
+  opacity: 0;
+  transform: translateY(24px);
+  transition:
+    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
+    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+  transition-delay: var(--reveal-delay, 0ms);
+}
+.reveal.is-inview {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+/* ---------- Hero load-in stagger ---------- */
+@keyframes rise-in {
+  from {
+    opacity: 0;
+    transform: translateY(28px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.rise {
+  opacity: 0;
+  animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation-delay: var(--rise-delay, 0ms);
+}
+
+/* ---------- Marquee ---------- */
+@keyframes marquee-x {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-50%);
+  }
+}
+.marquee-track {
+  animation: marquee-x 22s linear infinite;
+  will-change: transform;
+}
+
+/* ---------- Rotating word (5 kata + duplikat kata pertama) ---------- */
+@keyframes word-cycle {
+  0%,
+  16% {
+    transform: translateY(0);
+  }
+  20%,
+  36% {
+    transform: translateY(-1em);
+  }
+  40%,
+  56% {
+    transform: translateY(-2em);
+  }
+  60%,
+  76% {
+    transform: translateY(-3em);
+  }
+  80%,
+  96% {
+    transform: translateY(-4em);
+  }
+  100% {
+    transform: translateY(-5em);
+  }
+}
+.word-cycle {
+  animation: word-cycle 11s cubic-bezier(0.22, 1, 0.36, 1) infinite;
+}
+
+/* ---------- Chat loading dots ---------- */
+@keyframes dot-pulse {
+  0%,
+  80%,
+  100% {
+    opacity: 0.25;
+    transform: scale(0.85);
+  }
+  40% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+.dot-pulse span {
+  animation: dot-pulse 1.2s ease-in-out infinite;
+}
+.dot-pulse span:nth-child(2) {
+  animation-delay: 0.15s;
+}
+.dot-pulse span:nth-child(3) {
+  animation-delay: 0.3s;
+}
+
+/* ---------- Arrow shift on hover ---------- */
+.arrow-btn .arrow {
+  display: inline-block;
+  transition: transform 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.arrow-btn:hover .arrow {
+  transform: translateX(4px);
+}
+
+/* ---------- Card lift ---------- */
+.card-lift {
+  transition:
+    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
+    border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+}
+.card-lift:hover {
+  transform: translateY(-4px);
+  border-color: var(--blue-deep);
+}
+
+/* ---------- Reduced motion ---------- */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+  .rise,
+  .marquee-track,
+  .word-cycle,
+  .dot-pulse span {
+    animation: none !important;
+  }
+  .rise {
+    opacity: 1;
+  }
+  .reveal {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+  .card-lift,
+  .arrow-btn .arrow {
+    transition: none;
+  }
+}

@@ -1,0 +1,27 @@
+# Dependencies & build
+node_modules/
+.next/
+dist/
+build/
+*.tsbuildinfo
+
+# Environment
+.env
+.env.local
+.env*.local
+
+# Logs & OS
+npm-debug.log*
+.DS_Store
+Thumbs.db
+
+# Dokumen internal: PRD, docs, skills (tidak ikut repo)
+docs/
+.agents/
+.claude/
+*.docx
+
+# IDE
+.vscode/
+.idea/
+skills-lock.json

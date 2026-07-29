@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="64" height="64" viewBox="0 0 64 64">
+  <!-- KATALIS logomark: barcode-wave = "katalog yang berbicara" (catalog + AI voice) -->
+  <rect width="64" height="64" rx="14" fill="#1916B0"/>
+  <!-- barcode / soundwave bars -->
+  <rect x="14" y="24" width="4.5" height="16" rx="2.25" fill="#FFFFFF" opacity="0.85"/>
+  <rect x="22.5" y="17" width="4.5" height="30" rx="2.25" fill="#FFFFFF"/>
+  <rect x="31" y="10" width="4.5" height="44" rx="2.25" fill="#7CB1FF"/>
+  <rect x="39.5" y="17" width="4.5" height="30" rx="2.25" fill="#FFFFFF"/>
+  <rect x="48" y="24" width="4.5" height="16" rx="2.25" fill="#FFFFFF" opacity="0.85"/>
+</svg>
