@@ -20,8 +20,8 @@ export default function LoginPage() {
     setLoading(true);
     setError(null);
     try {
-      await login(email, password);
-      router.push("/");
+      const { role } = await login(email, password);
+      router.push(role === "admin" ? "/admin" : "/dashboard");
     } catch {
       setError("Email atau password salah.");
       setLoading(false);

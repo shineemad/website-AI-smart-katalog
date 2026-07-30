@@ -11,24 +11,42 @@ export function Preloader() {
   const [gone, setGone] = useState(true);
 
   useEffect(() => {
-    if (sessionStorage.getItem("katalis_loaded")) return;
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      sessionStorage.setItem("katalis_loaded", "1");
+    const root = document.documentElement;
+    const markReady = () => {
+      root.dataset.katalisReady = "true";
+    };
+
+    if (sessionStorage.getItem("katalis_loaded")) {
+      markReady();
       return;
     }
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      sessionStorage.setItem("katalis_loaded", "1");
+      markReady();
+      return;
+    }
+
+    delete root.dataset.katalisReady;
     setGone(false);
     let n = 0;
+    let finishTimer: ReturnType<typeof setTimeout> | undefined;
     const timer = setInterval(() => {
       n += Math.max(1, Math.round((100 - n) / 8));
       if (n >= 100) {
         n = 100;
         clearInterval(timer);
         sessionStorage.setItem("katalis_loaded", "1");
-        setTimeout(() => setGone(true), 450);
+        finishTimer = setTimeout(() => {
+          markReady();
+          setGone(true);
+        }, 450);
       }
       setCount(n);
     }, 50);
-    return () => clearInterval(timer);
+    return () => {
+      clearInterval(timer);
+      if (finishTimer) clearTimeout(finishTimer);
+    };
   }, []);
 
   if (gone) return null;

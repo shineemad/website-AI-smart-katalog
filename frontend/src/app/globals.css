@@ -2,6 +2,31 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Font utama: PP Telegraf + PP Fraktion Mono (komersial, pangrampangram.com).
+   Jika memiliki lisensinya, letakkan file .woff2 di src/app/fonts/ lalu
+   aktifkan blok @font-face di bawah. Tanpa file, browser memakai fallback
+   Archivo / Fragment Mono yang dimuat via next/font.
+
+@font-face {
+  font-family: "PP Telegraf";
+  src: url("./fonts/PPTelegraf-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Telegraf";
+  src: url("./fonts/PPTelegraf-Medium.woff2") format("woff2");
+  font-weight: 500 600;
+  font-display: swap;
+}
+@font-face {
+  font-family: "PP Fraktion Mono";
+  src: url("./fonts/PPFraktionMono-Regular.woff2") format("woff2");
+  font-weight: 400;
+  font-display: swap;
+}
+*/
+
 :root {
   --ink: #1f1f25;
   --gray: #606073;
@@ -14,6 +39,9 @@
 
 html {
   scroll-behavior: smooth;
+  /* Transform reveal/ornamen dapat memperluas scrollWidth; clip mencegah
+     scrollbar horizontal tanpa membuat scroll container baru */
+  overflow-x: clip;
 }
 
 body {
@@ -32,16 +60,40 @@ body {
 
 /* ---------- Reveal on scroll (dipicu IntersectionObserver via .is-inview) ---------- */
 .reveal {
+  --reveal-x: 0px;
+  --reveal-y: 44px;
+  --reveal-scale: 0.985;
+  --reveal-rotate: 0deg;
   opacity: 0;
-  transform: translateY(24px);
+  transform: translate3d(var(--reveal-x), var(--reveal-y), 0)
+    scale(var(--reveal-scale)) rotate(var(--reveal-rotate));
   transition:
-    opacity 0.55s cubic-bezier(0.22, 1, 0.36, 1),
-    transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    opacity 0.8s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
   transition-delay: var(--reveal-delay, 0ms);
 }
-.reveal.is-inview {
+.reveal-left {
+  --reveal-x: -56px;
+  --reveal-y: 12px;
+}
+.reveal-right {
+  --reveal-x: 56px;
+  --reveal-y: 12px;
+}
+.reveal-scale {
+  --reveal-y: 28px;
+  --reveal-scale: 0.94;
+}
+.reveal-tilt {
+  --reveal-x: -24px;
+  --reveal-y: 52px;
+  --reveal-scale: 0.96;
+  --reveal-rotate: -1.5deg;
+  transform-origin: 20% 100%;
+}
+[data-katalis-ready="true"] .reveal.is-inview {
   opacity: 1;
-  transform: translateY(0);
+  transform: translate3d(0, 0, 0) scale(1) rotate(0deg);
 }
 
 /* ---------- Hero load-in stagger ---------- */
@@ -57,8 +109,300 @@ body {
 }
 .rise {
   opacity: 0;
+}
+[data-katalis-ready="true"] .rise {
   animation: rise-in 0.7s cubic-bezier(0.22, 1, 0.36, 1) forwards;
   animation-delay: var(--rise-delay, 0ms);
+}
+
+.hero-line-mask {
+  display: block;
+  overflow: hidden;
+  padding-bottom: 0.04em;
+  margin-bottom: -0.04em;
+}
+.hero-line {
+  display: block;
+  opacity: 0;
+  transform: translate3d(0, 112%, 0) rotate(1.4deg);
+  transform-origin: 50% 100%;
+}
+@keyframes hero-line-in {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+[data-katalis-ready="true"] .hero-line {
+  animation: hero-line-in 0.95s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+  animation-delay: var(--hero-delay, 0ms);
+}
+
+.hero-search-enter {
+  opacity: 0;
+  transform: translate3d(0, 24px, 0) scaleX(0.92);
+  transform-origin: center;
+}
+@keyframes hero-search-in {
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) scaleX(1);
+  }
+}
+[data-katalis-ready="true"] .hero-search-enter {
+  animation: hero-search-in 0.9s cubic-bezier(0.16, 1, 0.3, 1) 280ms forwards;
+}
+
+.hero-ornament-art {
+  opacity: 0;
+}
+@keyframes hero-ornament-left-in {
+  from {
+    opacity: 0;
+    transform: translate3d(-52px, 18px, 0) rotate(-2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+@keyframes hero-ornament-right-in {
+  from {
+    opacity: 0;
+    transform: translate3d(52px, 18px, 0) rotate(2deg);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0, 0, 0) rotate(0deg);
+  }
+}
+[data-katalis-ready="true"] .hero-ornament-art-left {
+  animation: hero-ornament-left-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) 180ms
+    forwards;
+}
+[data-katalis-ready="true"] .hero-ornament-art-right {
+  animation: hero-ornament-right-in 1.15s cubic-bezier(0.16, 1, 0.3, 1) 240ms
+    forwards;
+}
+
+@keyframes hero-parallax-left {
+  to {
+    transform: translate3d(0, 120px, 0) rotate(-3deg);
+  }
+}
+@keyframes hero-parallax-right {
+  to {
+    transform: translate3d(0, 170px, 0) rotate(4deg);
+  }
+}
+@supports (animation-timeline: scroll()) {
+  .hero-ornament {
+    animation-duration: 1ms;
+    animation-timing-function: linear;
+    animation-fill-mode: both;
+    animation-timeline: scroll(root block);
+    animation-range: 0px 760px;
+  }
+  .hero-ornament-left {
+    animation-name: hero-parallax-left;
+  }
+  .hero-ornament-right {
+    animation-name: hero-parallax-right;
+  }
+}
+
+/* GSAP mengambil alih motion hero: keyframe CSS dimatikan agar tidak dobel */
+[data-hero-gsap="true"] .rise,
+[data-hero-gsap="true"] .hero-line,
+[data-hero-gsap="true"] .hero-search-enter,
+[data-hero-gsap="true"] .hero-ornament-art,
+[data-hero-gsap="true"] .hero-ornament {
+  animation: none !important;
+}
+/* Base entrance dinetralkan; state awal dipegang inline GSAP hingga clearProps */
+[data-hero-gsap="true"] .hero-search-enter {
+  opacity: 1;
+  transform: none;
+}
+
+/* ---------- Hover pill pencarian hero: lift + border biru + shadow tint ---------- */
+.hero-search-pill {
+  translate: 0 0;
+  transition:
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    translate 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- Navbar glass island (state compact dari GSAP state machine) ----------
+   Aproksimasi glassmorphism: backdrop-blur + border hairline + inner highlight.
+   Bukan material resmi platform mana pun. */
+.nav-shell {
+  margin-inline: auto;
+  border-radius: 0;
+  transition:
+    margin 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    max-width 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-radius 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.35s cubic-bezier(0.16, 1, 0.3, 1),
+    box-shadow 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+[data-nav-state="compact"] .nav-shell,
+[data-nav-state="hidden"] .nav-shell {
+  max-width: 1024px;
+  margin-top: 10px;
+  border-radius: 999px;
+  border: 1px solid rgba(224, 224, 235, 0.9);
+  background: rgba(255, 255, 255, 0.78);
+  backdrop-filter: blur(18px) saturate(160%);
+  -webkit-backdrop-filter: blur(18px) saturate(160%);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.85),
+    0 12px 40px -16px rgba(25, 22, 176, 0.25);
+}
+[data-nav-state="compact"] .nav-shell > div,
+[data-nav-state="hidden"] .nav-shell > div {
+  height: 60px;
+  padding-inline: 22px;
+}
+@media (max-width: 1063px) {
+  [data-nav-state="compact"] .nav-shell,
+  [data-nav-state="hidden"] .nav-shell {
+    margin-inline: 12px;
+    max-width: none;
+  }
+}
+@media (prefers-reduced-transparency: reduce) {
+  [data-nav-state="compact"] .nav-shell,
+  [data-nav-state="hidden"] .nav-shell {
+    background: rgba(255, 255, 255, 0.98);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .nav-shell {
+    transition: none;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .hero-search-pill:hover,
+  .hero-search-pill:focus-within {
+    border-color: var(--blue-deep);
+    translate: 0 -3px;
+    box-shadow: 0 14px 34px -18px rgba(25, 22, 176, 0.35);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-search-pill {
+    transition: none;
+  }
+  .hero-search-pill:hover,
+  .hero-search-pill:focus-within {
+    translate: none;
+    box-shadow: none;
+    border-color: var(--blue-deep);
+  }
+}
+
+@keyframes brand-logo-motion {
+  to {
+    transform: translate3d(-50%, 0, 0);
+  }
+}
+.brand-logo-track {
+  animation: brand-logo-motion 24s linear infinite;
+  will-change: transform;
+}
+.brand-logo-set {
+  flex: 0 0 clamp(52rem, calc(100vw - 2rem), 72rem);
+}
+@media (hover: hover) and (pointer: fine) {
+  .brand-logo-rail:hover .brand-logo-track {
+    animation-play-state: paused;
+  }
+}
+
+/* ---------- Tactile motion ---------- */
+.motion-button,
+.motion-tile,
+.motion-surface {
+  transition:
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    background-color 0.3s cubic-bezier(0.16, 1, 0.3, 1),
+    color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+/* ---------- Kinetic category index: fill inversion dari bawah ---------- */
+.cat-row-fill {
+  transform: scaleY(0);
+  transition: transform 0.45s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cat-row:hover .cat-row-fill,
+.cat-row:focus-visible .cat-row-fill {
+  transform: scaleY(1);
+}
+/* Pinned scan (desktop): upcoming redup, active inversi biru, visited normal.
+   State di-set GSAP saat section terkunci; hover tetap menang di baris redup. */
+@media (min-width: 1024px) {
+  .cat-row[data-state="upcoming"]:not(:hover):not(:focus-visible) .cat-icon,
+  .cat-row[data-state="upcoming"]:not(:hover):not(:focus-visible) .cat-name,
+  .cat-row[data-state="upcoming"]:not(:hover):not(:focus-visible) .cat-meta {
+    color: #c9c9dc;
+  }
+  .cat-row[data-state="active"] .cat-row-fill {
+    transform: scaleY(1);
+  }
+  .cat-row[data-state="active"] .cat-name {
+    color: #ffffff;
+  }
+  .cat-row[data-state="active"] .cat-icon,
+  .cat-row[data-state="active"] .cat-meta {
+    color: #7cb1ff;
+  }
+  .cat-row[data-state="active"] .cat-arrow {
+    opacity: 1;
+    transform: none;
+  }
+}
+/* Panel preview kategori: crossfade gambar mengikuti baris aktif */
+.cat-preview-frame {
+  opacity: 0;
+  transform: scale(1.05);
+  transition:
+    opacity 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    transform 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.cat-preview-frame[data-show="true"] {
+  opacity: 1;
+  transform: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-preview-frame {
+    transition: none;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .cat-row-fill {
+    transition: none;
+  }
+}
+@media (hover: hover) and (pointer: fine) {
+  .motion-button:hover {
+    transform: translate3d(0, -2px, 0) scale(1.015);
+  }
+  .motion-tile:hover {
+    transform: translate3d(0, -7px, 0) scale(1.012);
+  }
+  .motion-surface:hover {
+    transform: translate3d(0, -6px, 0) rotateX(1deg);
+  }
+}
+.motion-button:active,
+.motion-tile:active {
+  transform: translate3d(0, 1px, 0) scale(0.98);
 }
 
 /* ---------- Marquee ---------- */
@@ -140,12 +484,14 @@ body {
 /* ---------- Card lift ---------- */
 .card-lift {
   transition:
-    transform 0.2s cubic-bezier(0.22, 1, 0.36, 1),
-    border-color 0.2s cubic-bezier(0.22, 1, 0.36, 1);
+    transform 0.45s cubic-bezier(0.16, 1, 0.3, 1),
+    border-color 0.3s cubic-bezier(0.16, 1, 0.3, 1);
 }
-.card-lift:hover {
-  transform: translateY(-4px);
-  border-color: var(--blue-deep);
+@media (hover: hover) and (pointer: fine) {
+  .card-lift:hover {
+    transform: translate3d(0, -6px, 0) scale(1.008);
+    border-color: var(--blue-deep);
+  }
 }
 
 /* ---------- Reduced motion ---------- */
@@ -155,11 +501,36 @@ body {
   }
   .rise,
   .marquee-track,
+  .brand-logo-track,
   .word-cycle,
   .dot-pulse span {
     animation: none !important;
   }
   .rise {
+    opacity: 1;
+  }
+  .hero-line,
+  .hero-search-enter,
+  .hero-ornament,
+  .hero-ornament-art {
+    transform: none;
+    animation: none !important;
+  }
+  .brand-logo-track {
+    width: 100%;
+  }
+  .brand-logo-set {
+    flex-wrap: wrap;
+    justify-content: center;
+    row-gap: 1.5rem;
+  }
+  .brand-logo-set[aria-hidden="true"] {
+    display: none;
+  }
+  .hero-line,
+  .hero-search-enter,
+  .hero-ornament,
+  .hero-ornament-art {
     opacity: 1;
   }
   .reveal {
@@ -168,7 +539,25 @@ body {
     transition: none;
   }
   .card-lift,
-  .arrow-btn .arrow {
+  .arrow-btn .arrow,
+  .motion-button,
+  .motion-tile,
+  .motion-surface {
     transition: none;
+  }
+  .card-lift:hover,
+  .motion-button:hover,
+  .motion-tile:hover,
+  .motion-surface:hover {
+    transform: none;
+  }
+}
+
+@media (max-width: 767px) {
+  .reveal {
+    --reveal-x: 0px;
+    --reveal-y: 30px;
+    --reveal-scale: 0.975;
+    --reveal-rotate: 0deg;
   }
 }

@@ -20,12 +20,14 @@ import { useAuth } from "@/lib/auth-context";
 const CATEGORIES = ["Laptop", "Smartphone", "Tablet", "Monitor", "Aksesoris"];
 
 export default function AdminPage() {
-  const { role, ready } = useAuth();
+  const { token, role, ready } = useAuth();
   const router = useRouter();
 
   useEffect(() => {
-    if (ready && role !== "admin") router.replace("/");
-  }, [ready, role, router]);
+    if (!ready) return;
+    if (!token) router.replace("/login");
+    else if (role !== "admin") router.replace("/dashboard");
+  }, [ready, token, role, router]);
 
   if (!ready || role !== "admin") {
     return (

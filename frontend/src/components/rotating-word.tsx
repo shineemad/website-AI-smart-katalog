@@ -6,16 +6,21 @@
 export function RotatingWord({ words }: { words: string[] }) {
   const list = [...words, words[0]];
   return (
-    <span className="inline-flex h-[1.15em] items-center overflow-hidden rounded-md2 border-2 border-blue-electric bg-blue-tint px-[0.25em] align-baseline leading-none">
-      <span className="flex flex-col">
-        {list.map((w, i) => (
-          <span
-            key={i}
-            className="word-cycle block h-[1em] leading-[1em] text-blue-deep"
-          >
-            {w}
-          </span>
-        ))}
+    <span
+      className="inline-flex items-center overflow-hidden rounded-md2 border-2 border-blue-electric bg-blue-tint px-[0.25em] py-[0.08em] align-middle leading-none"
+      aria-label={words[0]}
+    >
+      <span aria-hidden className="block h-[1em] overflow-hidden">
+        <span className="word-cycle flex flex-col">
+          {list.map((word, index) => (
+            <span
+              key={`${word}-${index}`}
+              className="block h-[1em] shrink-0 whitespace-nowrap leading-[1em] text-blue-deep"
+            >
+              {word}
+            </span>
+          ))}
+        </span>
       </span>
     </span>
   );

@@ -22,7 +22,7 @@ interface AuthState {
   email: string | null;
   role: string | null;
   ready: boolean;
-  login: (email: string, password: string) => Promise<void>;
+  login: (email: string, password: string) => Promise<{ role: string | null }>;
   logout: () => void;
 }
 
@@ -58,6 +58,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const { accessToken } = await api.login(email, password);
     localStorage.setItem("katalis_token", accessToken);
     setToken(accessToken);
+    return { role: decodeJwt(accessToken)?.role ?? null };
   }, []);
 
   const logout = useCallback(() => {

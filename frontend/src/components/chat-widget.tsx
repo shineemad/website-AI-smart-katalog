@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { api, ApiError } from "@/lib/api";
+import { AiText } from "./ai-text";
 import { LogoMark } from "./logo";
 
 interface Message {
@@ -100,13 +101,13 @@ export function ChatWidget({
             {messages.map((m, i) => (
               <div
                 key={i}
-                className={`max-w-[85%] whitespace-pre-line rounded-md2 px-3.5 py-2.5 text-sm leading-relaxed ${
+                className={`max-w-[85%] rounded-md2 px-3.5 py-2.5 text-sm leading-relaxed ${
                   m.role === "user"
-                    ? "ml-auto bg-blue-tint text-ink-soft"
+                    ? "ml-auto whitespace-pre-line bg-blue-tint text-ink-soft"
                     : "mr-auto border border-lavender bg-white text-ink-soft"
                 }`}
               >
-                {m.text}
+                {m.role === "ai" ? <AiText text={m.text} /> : m.text}
               </div>
             ))}
             {loading && (

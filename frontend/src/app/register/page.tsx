@@ -28,7 +28,7 @@ export default function RegisterPage() {
     try {
       await api.register(name, email, password);
       await login(email, password);
-      router.push("/");
+      router.push("/dashboard");
     } catch (err) {
       setError(
         err instanceof ApiError && err.status === 400

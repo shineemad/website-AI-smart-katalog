@@ -2,17 +2,21 @@
 
 import { useEffect, useRef } from "react";
 
+type RevealVariant = "up" | "left" | "right" | "scale" | "tilt";
+
 /**
- * Wrapper reveal-on-scroll: fade + translate-up saat masuk viewport
- * (IntersectionObserver, sekali saja). Delay stagger via prop.
+ * Wrapper reveal-on-scroll dengan varian arah, dipicu satu kali oleh
+ * IntersectionObserver. Delay stagger dikendalikan melalui prop.
  */
 export function Reveal({
   children,
   delay = 0,
+  variant = "up",
   className = "",
 }: {
   children: React.ReactNode;
   delay?: number;
+  variant?: RevealVariant;
   className?: string;
 }) {
   const ref = useRef<HTMLDivElement>(null);
@@ -38,7 +42,7 @@ export function Reveal({
   return (
     <div
       ref={ref}
-      className={`reveal ${className}`}
+      className={`reveal reveal-${variant} ${className}`}
       style={{ "--reveal-delay": `${delay}ms` } as React.CSSProperties}
     >
       {children}

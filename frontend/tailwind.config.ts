@@ -25,9 +25,9 @@ const config: Config = {
         warning: "#D97706",
       },
       fontFamily: {
-        display: ["var(--font-archivo)", "sans-serif"],
-        body: ["var(--font-archivo)", "sans-serif"],
-        mono: ["var(--font-fragment)", "monospace"],
+        display: ["var(--font-space)", "sans-serif"],
+        body: ["var(--font-dmsans)", "sans-serif"],
+        mono: ["PP Fraktion Mono", "var(--font-fragment)", "monospace"],
       },
       borderRadius: {
         sm2: "6px",

@@ -1,12 +1,18 @@
 import type { Metadata } from "next";
-import { Archivo, Fragment_Mono } from "next/font/google";
+import { DM_Sans, Fragment_Mono, Space_Grotesk } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/lib/auth-context";
 import { Preloader } from "@/components/preloader";
 
-const archivo = Archivo({
+const spaceGrotesk = Space_Grotesk({
   subsets: ["latin"],
-  variable: "--font-archivo",
+  variable: "--font-space",
+  display: "swap",
+});
+
+const dmSans = DM_Sans({
+  subsets: ["latin"],
+  variable: "--font-dmsans",
   display: "swap",
 });
 
@@ -31,7 +37,7 @@ export default function RootLayout({
   return (
     <html lang="id">
       <body
-        className={`${archivo.variable} ${fragmentMono.variable} font-body antialiased`}
+        className={`${spaceGrotesk.variable} ${dmSans.variable} ${fragmentMono.variable} font-body antialiased`}
       >
         <Preloader />
         <AuthProvider>{children}</AuthProvider>

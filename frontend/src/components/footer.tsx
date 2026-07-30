@@ -54,7 +54,13 @@ export function Footer() {
             </ul>
           </div>
         </div>
-        <div className="mt-14 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
+        <p
+          aria-hidden
+          className="mt-16 select-none text-center font-display text-[clamp(3.5rem,13vw,10rem)] font-semibold uppercase leading-none tracking-[-0.03em] text-white/[0.07]"
+        >
+          Katalis
+        </p>
+        <div className="mt-6 flex flex-col gap-2 border-t border-white/10 pt-6 text-xs text-white/50 md:flex-row md:items-center md:justify-between">
           <span>© 2026 KATALIS AI. Katalog yang berpikir.</span>
           <span className="font-mono">Ditenagai Ollama + MongoDB + MinIO</span>
         </div>
