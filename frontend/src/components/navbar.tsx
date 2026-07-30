@@ -1,18 +1,24 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
 import Link from "next/link";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
+import { List, X } from "@phosphor-icons/react";
 import { useAuth } from "@/lib/auth-context";
 import { Logo } from "./logo";
 
 /**
- * Navbar putih satu baris (tinggi 68px) + announcement bar biru di atasnya.
+ * Navbar satu baris (68px): bar putih menyatu dengan hero di puncak halaman,
+ * berubah jadi glass pill saat scroll, sembunyi saat scroll turun.
+ * Di bawah md, navigasi pindah ke menu full-screen dengan line-mask reveal
+ * (bahasa motion yang sama dengan headline hero).
  */
 export function Navbar() {
   const { token, role, email, ready, logout } = useAuth();
   const headerRef = useRef<HTMLElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
 
   useEffect(() => {
     const header = headerRef.current;
@@ -32,6 +38,9 @@ export function Navbar() {
           header.querySelectorAll("[data-nav-section]"),
         );
         const action = header.querySelector<HTMLElement>("[data-nav-action]");
+        const menuBtn = gsap.utils.toArray<HTMLElement>(
+          header.querySelectorAll("[data-nav-menu]"),
+        );
 
         if (!nav || !logo || !action) return;
 
@@ -63,6 +72,12 @@ export function Navbar() {
               { scale: 0.92, autoAlpha: 0 },
               { scale: 1, autoAlpha: 1, duration: 0.72 },
               "-=0.48",
+            )
+            .fromTo(
+              menuBtn,
+              { scale: 0.9, autoAlpha: 0 },
+              { scale: 1, autoAlpha: 1, duration: 0.6 },
+              "-=0.55",
             );
         };
 
@@ -94,7 +109,8 @@ export function Navbar() {
           currentState = nextState;
           header.dataset.navState = nextState;
 
-          moveHeader(nextState === "hidden" ? -(navHeight + 8) : 0);
+          /* +48 agar bayangan glass pill ikut keluar dari viewport */
+          moveHeader(nextState === "hidden" ? -(navHeight + 48) : 0);
         };
 
         setHeaderState(window.scrollY > 24 ? "compact" : "full");
@@ -261,78 +277,227 @@ export function Navbar() {
     return () => media.revert();
   }, []);
 
+  /* Menu mobile: overlay biru dengan line-mask reveal (bahasa yang sama
+     dengan headline hero). Selector diambil segar tiap toggle agar link
+     kondisional (Dashboard saat login) ikut teranimasi. */
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+
+    const reduce = window.matchMedia(
+      "(prefers-reduced-motion: reduce)",
+    ).matches;
+    const links = gsap.utils.toArray<HTMLElement>("[data-menu-link]", overlay);
+    const foot = overlay.querySelector<HTMLElement>("[data-menu-foot]");
+
+    document.body.style.overflow = menuOpen ? "hidden" : "";
+
+    if (menuOpen) {
+      overlay
+        .querySelector<HTMLElement>("[data-menu-close]")
+        ?.focus({ preventScroll: true });
+      if (reduce) {
+        gsap.set(overlay, { autoAlpha: 1 });
+        gsap.set(foot ? [...links, foot] : links, { clearProps: "all" });
+      } else {
+        const tl = gsap
+          .timeline({ defaults: { ease: "expo.out" } })
+          .fromTo(overlay, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.4 })
+          .fromTo(
+            links,
+            { yPercent: 112 },
+            { yPercent: 0, duration: 0.85, stagger: 0.08 },
+            0.06,
+          );
+        if (foot) {
+          tl.fromTo(
+            foot,
+            { y: 16, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: 0.5 },
+            0.35,
+          );
+        }
+      }
+    } else if (reduce) {
+      gsap.set(overlay, { autoAlpha: 0 });
+    } else {
+      gsap.to(overlay, { autoAlpha: 0, duration: 0.3, ease: "power2.in" });
+    }
+
+    return () => {
+      document.body.style.overflow = "";
+    };
+  }, [menuOpen]);
+
+  /* Tutup menu dengan tombol Escape */
+  useEffect(() => {
+    if (!menuOpen) return;
+    const onKey = (e: KeyboardEvent) => {
+      if (e.key === "Escape") setMenuOpen(false);
+    };
+    window.addEventListener("keydown", onKey);
+    return () => window.removeEventListener("keydown", onKey);
+  }, [menuOpen]);
+
+  const menuLinks = [
+    { href: "/#katalog", label: "Katalog" },
+    { href: "/#cara-kerja", label: "Cara Kerja" },
+    ...(ready && token
+      ? [
+          {
+            href: role === "admin" ? "/admin" : "/dashboard",
+            label: "Dashboard",
+          },
+        ]
+      : [{ href: "/login", label: "Masuk" }]),
+  ];
+
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 will-change-transform">
-      <nav
-        data-nav-shell
-        className="nav-shell border-b border-lavender bg-white/95 backdrop-blur-sm"
+    <>
+      <header
+        ref={headerRef}
+        className="sticky top-0 z-50 will-change-transform"
       >
-        <div className="mx-auto flex h-[68px] max-w-page items-center justify-between px-4 md:px-6">
-          <div data-nav-logo>
-            <Logo />
-          </div>
-          <div className="flex items-center gap-2 md:gap-5">
-            <Link
-              href="/#katalog"
-              data-nav-section="katalog"
-              className="relative hidden py-2 text-sm font-medium text-gray2 transition-colors hover:text-ink focus-visible:text-ink focus-visible:outline-none md:block"
-            >
-              <span data-nav-label className="inline-block">
-                Katalog
-              </span>
-              <span
-                data-nav-underline
-                aria-hidden
-                className="absolute bottom-0 left-0 h-px w-full bg-blue-deep"
-              />
-            </Link>
-            <Link
-              href="/#cara-kerja"
-              data-nav-section="cara-kerja"
-              className="relative hidden py-2 text-sm font-medium text-gray2 transition-colors hover:text-ink focus-visible:text-ink focus-visible:outline-none md:block"
-            >
-              <span data-nav-label className="inline-block">
-                Cara Kerja
-              </span>
-              <span
-                data-nav-underline
-                aria-hidden
-                className="absolute bottom-0 left-0 h-px w-full bg-blue-deep"
-              />
-            </Link>
-            {ready && token && (
+        <nav
+          data-nav-shell
+          className="nav-shell border-b border-lavender bg-white/95 backdrop-blur-sm"
+        >
+          <div className="mx-auto flex h-[68px] max-w-page items-center justify-between px-4 md:px-6">
+            <div data-nav-logo>
+              <Logo />
+            </div>
+            <div className="flex items-center gap-2 md:gap-5">
               <Link
-                href={role === "admin" ? "/admin" : "/dashboard"}
-                className="rounded-full bg-blue-tint px-4 py-2 text-sm font-semibold text-blue-deep transition-colors hover:bg-blue-deep hover:text-white active:scale-[0.98]"
+                href="/#katalog"
+                data-nav-section="katalog"
+                className="relative hidden py-2 text-sm font-medium text-gray2 transition-colors hover:text-ink focus-visible:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric md:block"
               >
-                Dashboard
+                <span data-nav-label className="inline-block">
+                  Katalog
+                </span>
+                <span
+                  data-nav-underline
+                  aria-hidden
+                  className="absolute bottom-0 left-0 h-px w-full bg-blue-deep"
+                />
               </Link>
-            )}
-            <div data-nav-action>
-              {ready && token ? (
-                <div className="flex items-center gap-3">
-                  <span className="hidden font-mono text-xs text-gray-muted lg:block">
-                    {email}
-                  </span>
-                  <button
-                    onClick={logout}
-                    className="rounded-full border border-lavender px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-blue-deep hover:text-blue-deep active:scale-[0.98]"
-                  >
-                    Keluar
-                  </button>
-                </div>
-              ) : (
+              <Link
+                href="/#cara-kerja"
+                data-nav-section="cara-kerja"
+                className="relative hidden py-2 text-sm font-medium text-gray2 transition-colors hover:text-ink focus-visible:text-ink focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric md:block"
+              >
+                <span data-nav-label className="inline-block">
+                  Cara Kerja
+                </span>
+                <span
+                  data-nav-underline
+                  aria-hidden
+                  className="absolute bottom-0 left-0 h-px w-full bg-blue-deep"
+                />
+              </Link>
+              {ready && token && (
                 <Link
-                  href="/login"
-                  className="arrow-btn block rounded-full bg-blue-deep px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-electric active:scale-[0.98]"
+                  href={role === "admin" ? "/admin" : "/dashboard"}
+                  className="hidden rounded-full bg-blue-tint px-4 py-2 text-sm font-semibold text-blue-deep transition-colors hover:bg-blue-deep hover:text-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric active:scale-[0.98] md:block"
                 >
-                  Masuk <span className="arrow">→</span>
+                  Dashboard
                 </Link>
               )}
+              <div data-nav-action>
+                {ready && token ? (
+                  <div className="hidden items-center gap-3 md:flex">
+                    <span className="hidden font-mono text-xs text-gray-muted lg:block">
+                      {email}
+                    </span>
+                    <button
+                      onClick={logout}
+                      className="rounded-full border border-lavender px-4 py-2 text-sm font-semibold text-ink transition-colors hover:border-blue-deep hover:text-blue-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric active:scale-[0.98]"
+                    >
+                      Keluar
+                    </button>
+                  </div>
+                ) : (
+                  <Link
+                    href="/login"
+                    className="arrow-btn block rounded-full bg-blue-deep px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-blue-electric focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric focus-visible:ring-offset-2 active:scale-[0.98]"
+                  >
+                    Masuk <span className="arrow">→</span>
+                  </Link>
+                )}
+              </div>
+              <button
+                data-nav-menu
+                type="button"
+                aria-expanded={menuOpen}
+                aria-controls="menu-mobile"
+                aria-label="Buka menu navigasi"
+                onClick={() => setMenuOpen(true)}
+                className="flex h-10 w-10 items-center justify-center rounded-full border border-lavender text-ink transition-colors hover:border-blue-deep hover:text-blue-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-blue-electric active:scale-[0.96] md:hidden"
+              >
+                <List size={20} weight="bold" />
+              </button>
             </div>
           </div>
+        </nav>
+      </header>
+
+      {/* Menu mobile full-screen: satu momen warna brand, line-mask reveal */}
+      <div
+        ref={overlayRef}
+        id="menu-mobile"
+        role="dialog"
+        aria-modal="true"
+        aria-label="Menu navigasi"
+        className="invisible fixed inset-0 z-[70] flex flex-col bg-blue-deep opacity-0 md:hidden"
+      >
+        <div className="flex h-[68px] items-center justify-between px-4">
+          <Logo light />
+          <button
+            type="button"
+            data-menu-close
+            aria-label="Tutup menu navigasi"
+            onClick={() => setMenuOpen(false)}
+            className="flex h-10 w-10 items-center justify-center rounded-full border border-white/25 text-white transition-colors hover:border-white focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.96]"
+          >
+            <X size={20} weight="bold" />
+          </button>
         </div>
-      </nav>
-    </header>
+
+        <nav className="flex flex-1 flex-col justify-center gap-1 px-6">
+          {menuLinks.map((l) => (
+            <div key={l.href} className="overflow-hidden py-1">
+              <Link
+                href={l.href}
+                data-menu-link
+                onClick={() => setMenuOpen(false)}
+                className="block font-display text-[13vw] font-semibold uppercase leading-[1.05] tracking-tight text-white transition-colors hover:text-blue-sky focus-visible:text-blue-sky focus-visible:outline-none sm:text-5xl"
+              >
+                {l.label}
+              </Link>
+            </div>
+          ))}
+        </nav>
+
+        {ready && token && (
+          <div
+            data-menu-foot
+            className="flex items-center justify-between gap-4 border-t border-white/15 px-6 py-5"
+          >
+            <span className="min-w-0 truncate font-mono text-xs text-blue-sky">
+              {email}
+            </span>
+            <button
+              onClick={() => {
+                setMenuOpen(false);
+                logout();
+              }}
+              className="shrink-0 rounded-full border border-white/30 px-5 py-2.5 text-sm font-semibold text-white transition-colors hover:bg-white hover:text-blue-deep focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-white active:scale-[0.98]"
+            >
+              Keluar
+            </button>
+          </div>
+        )}
+      </div>
+    </>
   );
 }

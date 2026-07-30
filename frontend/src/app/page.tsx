@@ -668,13 +668,14 @@ function CategoryTiles() {
   );
 }
 
-/* ---------------- Fitur unggulan: bento asimetris 1+2 ---------------- */
+/* ---------------- Fitur unggulan: bento dua jalur asimetris ---------------- */
 
 function FeatureBento() {
   const sectionRef = useRef<HTMLElement>(null);
 
-  /* GSAP: headline masuk, sel bento menyusul ber-stagger, lalu bubble
-     percakapan muncul berurutan (storytelling: chat terjadi di depan mata). */
+  /* GSAP: headline reveal per baris (bahasa motion yang sama dengan hero),
+     sel bento menyusul ber-stagger, lalu percakapan chat terjadi di depan
+     mata: tanya muncul, indikator mengetik berdenyut, jawaban masuk. */
   useEffect(() => {
     const section = sectionRef.current;
     if (!section) return;
@@ -682,7 +683,10 @@ function FeatureBento() {
 
     gsap.registerPlugin(ScrollTrigger);
     const ctx = gsap.context(() => {
-      const head = section.querySelector("[data-feat-head]");
+      const lines = gsap.utils.toArray<HTMLElement>(
+        "[data-feat-line]",
+        section,
+      );
       const cells = gsap.utils.toArray<HTMLElement>(
         "[data-feat-cell]",
         section,
@@ -691,31 +695,66 @@ function FeatureBento() {
         "[data-feat-bubble]",
         section,
       );
+      const typers = gsap.utils.toArray<HTMLElement>(
+        "[data-feat-typing]",
+        section,
+      );
 
-      gsap.set(head, { y: 28, opacity: 0 });
+      gsap.set(lines, { yPercent: 112, rotate: 1.4 });
       gsap.set(cells, { y: 44, opacity: 0 });
-      gsap.set(bubbles, { y: 14, opacity: 0 });
+      bubbles.forEach((bubble) => {
+        gsap.set(bubble, {
+          y: 12,
+          opacity: 0,
+          scale: 0.94,
+          transformOrigin:
+            bubble.dataset.side === "user" ? "100% 100%" : "0% 100%",
+        });
+      });
+
+      /* Bubble muncul dari sudut asalnya, seperti chat sungguhan */
+      const pop = () => ({
+        y: 0,
+        opacity: 1,
+        scale: 1,
+        duration: 0.5,
+        ease: "back.out(1.6)",
+      });
 
       ScrollTrigger.create({
         trigger: section,
         start: "top 72%",
         once: true,
         onEnter: () => {
-          gsap
-            .timeline({ defaults: { ease: "expo.out" } })
-            .to(head, { y: 0, opacity: 1, duration: 0.75 })
-            .to(
-              cells,
-              { y: 0, opacity: 1, duration: 0.85, stagger: 0.12 },
-              0.12,
-            )
-            .to(
-              bubbles,
-              { y: 0, opacity: 1, duration: 0.5, stagger: 0.16 },
-              0.55,
-            );
+          const tl = gsap.timeline({ defaults: { ease: "expo.out" } });
+          tl.to(lines, { yPercent: 0, rotate: 0, duration: 0.95, stagger: 0.1 })
+            .to(cells, { y: 0, opacity: 1, duration: 0.85, stagger: 0.12 }, 0.2)
+            .addLabel("chat", 0.85)
+            .to(bubbles[0], pop(), "chat")
+            .to(typers[0], { autoAlpha: 1, duration: 0.2 }, "chat+=0.4")
+            .to(typers[0], { autoAlpha: 0, duration: 0.15 }, "chat+=1.25")
+            .to(bubbles[1], pop(), "chat+=1.3")
+            .to(bubbles[2], pop(), "chat+=1.85")
+            .to(typers[1], { autoAlpha: 1, duration: 0.2 }, "chat+=2.3")
+            .to(typers[1], { autoAlpha: 0, duration: 0.15 }, "chat+=3.05")
+            .to(bubbles[3], pop(), "chat+=3.1");
         },
       });
+
+      /* Kolom kanan yang di-offset melayang pelan mengikuti scroll:
+         menegaskan komposisi dua jalur asimetris (desktop saja) */
+      if (window.matchMedia("(min-width: 1024px)").matches) {
+        gsap.to("[data-feat-right]", {
+          y: -36,
+          ease: "none",
+          scrollTrigger: {
+            trigger: section,
+            start: "top bottom",
+            end: "bottom top",
+            scrub: 1,
+          },
+        });
+      }
     }, section);
 
     return () => ctx.revert();
@@ -724,19 +763,27 @@ function FeatureBento() {
   return (
     <section ref={sectionRef} className="bg-bg-soft">
       <div className="mx-auto max-w-page px-4 py-20 md:px-6 md:py-28">
-        <h2
-          data-feat-head
-          className="max-w-xl font-display text-[clamp(1.8rem,4vw,3rem)] font-medium tracking-tight text-ink"
-        >
-          Bukan sekadar katalog.
+        {/* Momen display: dua baris ter-mask, baris kedua adalah tagline brand */}
+        <h2 className="font-display text-[clamp(2.3rem,5.2vw,4.25rem)] font-medium leading-[1.06] tracking-tight text-ink">
+          <span className="-mb-[0.08em] block overflow-hidden pb-[0.08em]">
+            <span data-feat-line className="block">
+              Bukan sekadar katalog.
+            </span>
+          </span>
+          <span className="-mb-[0.08em] block overflow-hidden pb-[0.08em]">
+            <span data-feat-line className="block text-blue-deep">
+              Katalog yang berpikir.
+            </span>
+          </span>
         </h2>
 
-        {/* Bento asimetris: panel chat besar di kiri, dua sel bertumpuk di kanan */}
-        <div className="mt-10 grid gap-4 lg:grid-cols-[1.4fr_1fr]">
-          {/* Sel A: preview chat nyata, percakapan muncul berurutan */}
+        {/* Bento dua jalur: panel chat lebar di kiri, kolom kanan sengaja
+            di-offset ke bawah sebagai ritme editorial */}
+        <div className="mt-12 grid gap-4 lg:grid-cols-12 lg:items-start">
+          {/* Sel A: preview chat nyata, percakapan terjadi di depan mata */}
           <div
             data-feat-cell
-            className="motion-surface flex flex-col rounded-lg2 border border-lavender bg-white p-6 md:p-7"
+            className="motion-surface flex flex-col rounded-lg2 border border-lavender bg-white p-6 md:p-7 lg:col-span-7"
           >
             <ChatCircleDots size={28} className="text-blue-deep" />
             <h3 className="mt-4 font-display text-xl font-semibold text-ink">
@@ -745,38 +792,65 @@ function FeatureBento() {
             <p className="mt-1.5 max-w-md text-sm leading-relaxed text-gray2">
               Tanyakan apa saja di halaman produk, dijawab dari spesifikasinya.
             </p>
-            {/* Contoh percakapan memakai gaya bubble chat asli */}
+            {/* Contoh percakapan memakai gaya bubble chat asli; indikator
+                mengetik menandakan AI sedang menyusun jawaban */}
             <div className="mt-6 flex-1 space-y-3 rounded-md2 bg-bg-soft/70 p-4 md:p-5">
               <p
                 data-feat-bubble
+                data-side="user"
                 className="ml-auto w-fit max-w-[80%] rounded-md2 bg-blue-tint px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
               >
                 Kuat buat editing video?
               </p>
+              <div className="relative">
+                <span
+                  data-feat-typing
+                  aria-hidden="true"
+                  className="invisible absolute left-0 top-0 inline-flex items-center gap-1 rounded-md2 border border-lavender bg-white px-3.5 py-[13px] opacity-0"
+                >
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                </span>
+                <p
+                  data-feat-bubble
+                  data-side="ai"
+                  className="mr-auto w-fit max-w-[80%] rounded-md2 border border-lavender bg-white px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
+                >
+                  Dengan RAM 16GB dan prosesor i7, laptop ini sanggup untuk
+                  editing video 1080p dengan lancar.
+                </p>
+              </div>
               <p
                 data-feat-bubble
-                className="mr-auto w-fit max-w-[80%] rounded-md2 border border-lavender bg-white px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
-              >
-                Dengan RAM 16GB dan prosesor i7, laptop ini sanggup untuk
-                editing video 1080p dengan lancar.
-              </p>
-              <p
-                data-feat-bubble
+                data-side="user"
                 className="ml-auto w-fit max-w-[80%] rounded-md2 bg-blue-tint px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
               >
                 Beratnya berapa?
               </p>
-              <p
-                data-feat-bubble
-                className="mr-auto w-fit max-w-[80%] rounded-md2 border border-lavender bg-white px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
-              >
-                Sekitar 1,4 kg, cukup ringan untuk dibawa kuliah setiap hari.
-              </p>
+              <div className="relative">
+                <span
+                  data-feat-typing
+                  aria-hidden="true"
+                  className="invisible absolute left-0 top-0 inline-flex items-center gap-1 rounded-md2 border border-lavender bg-white px-3.5 py-[13px] opacity-0"
+                >
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                  <span className="typing-dot" />
+                </span>
+                <p
+                  data-feat-bubble
+                  data-side="ai"
+                  className="mr-auto w-fit max-w-[80%] rounded-md2 border border-lavender bg-white px-3.5 py-2.5 text-[13px] leading-relaxed text-ink-soft"
+                >
+                  Sekitar 1,4 kg, cukup ringan untuk dibawa kuliah setiap hari.
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Sel B + C bertumpuk di kanan */}
-          <div className="grid gap-4">
+          {/* Sel B + C: kolom kanan ter-offset, drift pelan saat scroll */}
+          <div data-feat-right className="grid gap-4 lg:col-span-5 lg:mt-16">
             <div
               data-feat-cell
               className="motion-surface flex flex-col rounded-lg2 border border-blue-electric/30 bg-blue-tint p-6 md:p-7"
