@@ -204,6 +204,110 @@ function Hero() {
     };
   }, []);
 
+  /* Typewriter placeholder: memperagakan cara bertanya ke AI persis di kolom
+     yang akan dipakai pengguna. Kategori contoh beda dari chip agar tidak
+     duplikat. Berhenti saat fokus/terisi, mati di reduced-motion. */
+  useEffect(() => {
+    const input =
+      sectionRef.current?.querySelector<HTMLInputElement>("#ai-query");
+    if (!input) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    const DEFAULT_PLACEHOLDER = "Mau cari apa hari ini?";
+    const SAMPLES = [
+      "Tablet buat anak sekolah yang awet",
+      "Headphone noise cancelling untuk kerja",
+      "Smartphone RAM besar buat multitasking",
+    ];
+    let sampleIdx = 0;
+    let charIdx = 0;
+    let phase: "typing" | "holding" | "deleting" = "typing";
+    let holdTicks = 0;
+    let timeout: ReturnType<typeof setTimeout> | undefined;
+    let observer: MutationObserver | undefined;
+
+    const schedule = (ms: number) => {
+      timeout = setTimeout(step, ms);
+    };
+
+    const step = () => {
+      const text = SAMPLES[sampleIdx];
+      if (phase === "typing") {
+        charIdx += 1;
+        input.placeholder = text.slice(0, charIdx) + "|";
+        if (charIdx >= text.length) {
+          phase = "holding";
+          holdTicks = 0;
+          schedule(420);
+        } else {
+          /* Irama ketik manusiawi: kecepatan sedikit acak per karakter */
+          schedule(36 + Math.random() * 46);
+        }
+      } else if (phase === "holding") {
+        holdTicks += 1;
+        input.placeholder = text + (holdTicks % 2 ? "" : "|");
+        if (holdTicks >= 4) {
+          phase = "deleting";
+          schedule(260);
+        } else {
+          schedule(430);
+        }
+      } else {
+        charIdx -= 1;
+        if (charIdx <= 0) {
+          sampleIdx = (sampleIdx + 1) % SAMPLES.length;
+          phase = "typing";
+          charIdx = 0;
+          input.placeholder = "|";
+          schedule(520);
+        } else {
+          input.placeholder = text.slice(0, charIdx) + "|";
+          schedule(16);
+        }
+      }
+    };
+
+    const stop = () => {
+      if (timeout) clearTimeout(timeout);
+      input.placeholder = DEFAULT_PLACEHOLDER;
+    };
+    const start = () => {
+      if (document.activeElement === input || input.value) return;
+      if (timeout) clearTimeout(timeout);
+      phase = "typing";
+      charIdx = 0;
+      schedule(700);
+    };
+
+    input.addEventListener("focus", stop);
+    input.addEventListener("blur", start);
+
+    /* Mulai setelah preloader + entrance hero selesai */
+    const begin = () => schedule(1600);
+    if (document.documentElement.dataset.katalisReady === "true") {
+      begin();
+    } else {
+      observer = new MutationObserver(() => {
+        if (document.documentElement.dataset.katalisReady === "true") {
+          observer?.disconnect();
+          begin();
+        }
+      });
+      observer.observe(document.documentElement, {
+        attributes: true,
+        attributeFilter: ["data-katalis-ready"],
+      });
+    }
+
+    return () => {
+      observer?.disconnect();
+      if (timeout) clearTimeout(timeout);
+      input.removeEventListener("focus", stop);
+      input.removeEventListener("blur", start);
+      input.placeholder = DEFAULT_PLACEHOLDER;
+    };
+  }, []);
+
   async function runQuery(q: string) {
     if (loading) return;
     setLoading(true);
@@ -230,19 +334,24 @@ function Hero() {
   }
 
   return (
-    <section ref={sectionRef} className="relative overflow-hidden bg-white">
+    <section
+      ref={sectionRef}
+      className="relative flex min-h-[calc(100dvh-68px)] flex-col overflow-hidden bg-white"
+    >
       {/* Ornamen isometrik besar kiri-kanan ala referensi */}
-      <div className="hero-ornament hero-ornament-left pointer-events-none absolute -left-24 top-6 hidden w-[440px] lg:block">
+      <div className="hero-ornament hero-ornament-left pointer-events-none absolute -left-24 top-[12%] hidden w-[440px] lg:block">
         <HeroOrnamentLeft className="hero-ornament-art hero-ornament-art-left w-full" />
       </div>
-      <div className="hero-ornament hero-ornament-right pointer-events-none absolute -right-14 top-10 hidden w-[340px] lg:block">
+      <div className="hero-ornament hero-ornament-right pointer-events-none absolute -right-14 top-[16%] hidden w-[340px] lg:block">
         <HeroOrnamentRight className="hero-ornament-art hero-ornament-art-right w-full" />
       </div>
 
-      <div className="relative mx-auto max-w-page px-4 pb-14 pt-14 md:px-6 md:pb-20 md:pt-20">
+      {/* Konten ter-center vertikal: jarak dari navbar lahir dari centering,
+          bukan padding besar */}
+      <div className="relative mx-auto flex w-full max-w-page flex-1 flex-col justify-center px-4 py-12 md:px-6 md:py-16">
         <h1
           aria-label="Temukan produk yang tepat dengan AI."
-          className="mx-auto max-w-4xl text-center font-display text-[clamp(2.3rem,5.8vw,4.5rem)] font-medium uppercase leading-[1] tracking-[-0.025em] text-ink"
+          className="mx-auto max-w-4xl text-center font-display text-[clamp(1.9rem,5.8vw,4.5rem)] font-medium uppercase leading-[1] tracking-[-0.025em] text-ink"
         >
           <span className="hero-line-mask">
             <span
@@ -1216,101 +1325,129 @@ const STEPS = [
 ] as const;
 
 function HowItWorks() {
+  const sectionRef = useRef<HTMLElement>(null);
+
+  /* GSAP: headline masuk, tiap baris terungkap berurutan (hairline tergambar,
+     angka raksasa naik dari mask, teks menyusul), rail kiri terisi mengikuti
+     progres membaca (storytelling: tiga langkah sedang dilalui). */
+  useEffect(() => {
+    const section = sectionRef.current;
+    if (!section) return;
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
+    gsap.registerPlugin(ScrollTrigger);
+    const ctx = gsap.context(() => {
+      const head = section.querySelector("[data-steps-head]");
+      gsap.set(head, { y: 28, opacity: 0 });
+      ScrollTrigger.create({
+        trigger: section,
+        start: "top 75%",
+        once: true,
+        onEnter: () => {
+          gsap.to(head, { y: 0, opacity: 1, duration: 0.75, ease: "expo.out" });
+        },
+      });
+
+      const rows = gsap.utils.toArray<HTMLElement>("[data-step-row]", section);
+      rows.forEach((row) => {
+        const line = row.querySelector("[data-step-line]");
+        const num = row.querySelector("[data-step-num] > span");
+        const copy = row.querySelector("[data-step-copy]");
+        gsap.set(line, { scaleX: 0, transformOrigin: "0% 50%" });
+        gsap.set(num, { yPercent: 60, opacity: 0 });
+        gsap.set(copy, { y: 24, opacity: 0 });
+        ScrollTrigger.create({
+          trigger: row,
+          start: "top 80%",
+          once: true,
+          onEnter: () => {
+            gsap
+              .timeline({ defaults: { ease: "expo.out" } })
+              .to(line, { scaleX: 1, duration: 0.9, ease: "power3.inOut" })
+              .to(num, { yPercent: 0, opacity: 1, duration: 0.85 }, 0.15)
+              .to(copy, { y: 0, opacity: 1, duration: 0.75 }, 0.3);
+          },
+        });
+      });
+
+      /* Rail progres kiri, hanya md+ (di mobile rail disembunyikan) */
+      if (window.matchMedia("(min-width: 768px)").matches) {
+        gsap.fromTo(
+          "[data-step-rail]",
+          { scaleY: 0 },
+          {
+            scaleY: 1,
+            ease: "none",
+            transformOrigin: "50% 0%",
+            scrollTrigger: {
+              trigger: section.querySelector("[data-step-list]"),
+              start: "top 70%",
+              end: "bottom 55%",
+              scrub: 1,
+            },
+          },
+        );
+      }
+    }, section);
+
+    return () => ctx.revert();
+  }, []);
+
   return (
-    <section id="cara-kerja" className="bg-white">
+    <section ref={sectionRef} id="cara-kerja" className="bg-white">
       <div className="mx-auto max-w-page px-4 py-20 md:px-6 md:py-28">
-        <Reveal>
-          <h2 className="max-w-2xl font-display text-[clamp(1.8rem,4vw,3rem)] font-medium tracking-tight text-ink">
-            Dari bingung ke yakin, dalam tiga langkah.
-          </h2>
-        </Reveal>
-        <div className="mt-12 grid gap-4 md:grid-cols-3">
-          {STEPS.map((s, i) => {
-            const utama = i === 1; // "Tanya AI" = fitur inti, kartu di-highlight
-            return (
-              <Reveal key={s.no} delay={i * 110}>
+        <h2
+          data-steps-head
+          className="max-w-2xl font-display text-[clamp(1.8rem,4vw,3rem)] font-medium tracking-tight text-ink"
+        >
+          Dari bingung ke yakin, dalam tiga langkah.
+        </h2>
+
+        {/* Process index editorial: baris penuh dengan angka raksasa,
+            langkah AI (02) memegang aksen biru */}
+        <div className="relative mt-14" data-step-list>
+          <div
+            aria-hidden
+            className="absolute bottom-0 left-0 top-0 hidden w-px bg-lavender md:block"
+          >
+            <div data-step-rail className="h-full w-full bg-blue-deep" />
+          </div>
+          <ol className="md:pl-12">
+            {STEPS.map((s, i) => (
+              <li
+                key={s.no}
+                data-step-row
+                className="relative grid gap-2 py-10 md:grid-cols-12 md:items-center md:gap-4 md:py-14"
+              >
                 <div
-                  className={`motion-surface group relative h-full overflow-hidden rounded-lg2 border p-7 transition-colors ${
-                    utama
-                      ? "border-blue-deep bg-blue-deep"
-                      : "border-lavender bg-white hover:border-blue-deep hover:bg-blue-tint/40"
-                  }`}
+                  data-step-line
+                  aria-hidden
+                  className="absolute inset-x-0 top-0 h-px bg-lavender"
+                />
+                <span
+                  aria-hidden
+                  data-step-num
+                  className="block overflow-hidden md:col-span-4"
                 >
-                  {utama && (
-                    <svg
-                      viewBox="0 0 64 64"
-                      aria-hidden
-                      className="absolute -right-4 -top-4 h-28 w-28 opacity-15"
-                    >
-                      <rect
-                        x="14"
-                        y="24"
-                        width="4.5"
-                        height="16"
-                        rx="2.25"
-                        fill="#FFFFFF"
-                      />
-                      <rect
-                        x="22.5"
-                        y="17"
-                        width="4.5"
-                        height="30"
-                        rx="2.25"
-                        fill="#FFFFFF"
-                      />
-                      <rect
-                        x="31"
-                        y="10"
-                        width="4.5"
-                        height="44"
-                        rx="2.25"
-                        fill="#7CB1FF"
-                      />
-                      <rect
-                        x="39.5"
-                        y="17"
-                        width="4.5"
-                        height="30"
-                        rx="2.25"
-                        fill="#FFFFFF"
-                      />
-                      <rect
-                        x="48"
-                        y="24"
-                        width="4.5"
-                        height="16"
-                        rx="2.25"
-                        fill="#FFFFFF"
-                      />
-                    </svg>
-                  )}
                   <span
-                    className={`inline-flex h-12 w-12 items-center justify-center rounded-md2 font-mono text-lg font-semibold tabular-nums transition-colors duration-200 ${
-                      utama
-                        ? "bg-white/15 text-white"
-                        : "bg-blue-tint text-blue-deep group-hover:bg-blue-deep group-hover:text-white"
+                    className={`block font-display text-[clamp(4rem,9vw,7.5rem)] font-medium leading-[0.95] tracking-tight tabular-nums ${
+                      i === 1 ? "text-blue-deep" : "text-lavender"
                     }`}
                   >
                     {s.no}
                   </span>
-                  <h3
-                    className={`mt-6 font-display text-xl font-semibold ${
-                      utama ? "text-white" : "text-ink"
-                    }`}
-                  >
+                </span>
+                <div data-step-copy className="md:col-span-8 md:col-start-6">
+                  <h3 className="font-display text-2xl font-semibold text-ink md:text-[1.75rem]">
                     {s.title}
                   </h3>
-                  <p
-                    className={`mt-2.5 max-w-[36ch] text-sm leading-relaxed ${
-                      utama ? "text-white/75" : "text-gray2"
-                    }`}
-                  >
+                  <p className="mt-3 max-w-[46ch] text-[15px] leading-relaxed text-gray2">
                     {s.body}
                   </p>
                 </div>
-              </Reveal>
-            );
-          })}
+              </li>
+            ))}
+          </ol>
         </div>
       </div>
     </section>
