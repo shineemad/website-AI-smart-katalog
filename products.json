@@ -1,0 +1,720 @@
+[
+  {
+    "name": "Laptop Acer Swift 3 SF314",
+    "category": "Laptop",
+    "price": 10500000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Intel Core i7-1355U generasi ke-13",
+      "ram": "16GB DDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "14 inci FHD IPS, warna akurat untuk kerja harian",
+      "gpu": "Intel Iris Xe",
+      "weight": "1.25 kg, ringan dibawa bepergian",
+      "battery": "56Wh, tahan hingga 9 jam pemakaian normal"
+    }
+  },
+  {
+    "name": "Laptop ASUS TUF Gaming F15 FX507",
+    "category": "Laptop",
+    "price": 14999000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Intel Core i5-12500H",
+      "ram": "16GB DDR4, bisa di-upgrade",
+      "storage": "512GB NVMe SSD",
+      "display": "15.6 inci FHD 144Hz, mulus untuk gaming",
+      "gpu": "NVIDIA GeForce RTX 3050 4GB",
+      "weight": "2.2 kg",
+      "battery": "56Wh, sekitar 5 jam pemakaian ringan",
+      "fitur": "Pendingin dual fan anti debu, keyboard RGB"
+    }
+  },
+  {
+    "name": "Laptop Lenovo IdeaPad Slim 3 15ABR8",
+    "category": "Laptop",
+    "price": 7299000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "AMD Ryzen 5 7520U",
+      "ram": "8GB LPDDR5",
+      "storage": "512GB SSD",
+      "display": "15.6 inci FHD anti silau",
+      "gpu": "AMD Radeon 610M",
+      "weight": "1.62 kg",
+      "battery": "47Wh, cukup untuk seharian kuliah"
+    }
+  },
+  {
+    "name": "Laptop Apple MacBook Air 13 M4",
+    "category": "Laptop",
+    "price": 18499000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Apple M4 10-core, sangat cepat dan hemat daya",
+      "ram": "16GB Unified Memory",
+      "storage": "256GB SSD",
+      "display": "13.6 inci Liquid Retina, tajam dan terang",
+      "gpu": "Apple 8-core GPU",
+      "weight": "1.24 kg, sangat tipis dan ringan",
+      "battery": "Hingga 18 jam, bisa seharian tanpa charger"
+    }
+  },
+  {
+    "name": "Laptop Apple MacBook Pro 14 M4 Pro",
+    "category": "Laptop",
+    "price": 33999000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Apple M4 Pro 12-core, kencang untuk editing video",
+      "ram": "24GB Unified Memory",
+      "storage": "512GB SSD",
+      "display": "14.2 inci Liquid Retina XDR 120Hz",
+      "gpu": "Apple 16-core GPU",
+      "weight": "1.6 kg",
+      "battery": "Hingga 22 jam pemutaran video"
+    }
+  },
+  {
+    "name": "Laptop HP Pavilion Aero 13",
+    "category": "Laptop",
+    "price": 12499000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "AMD Ryzen 7 7735U",
+      "ram": "16GB LPDDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "13.3 inci WUXGA IPS 400 nits",
+      "gpu": "AMD Radeon 680M",
+      "weight": "0.99 kg, salah satu laptop paling ringan di kelasnya",
+      "battery": "43Wh, hingga 10 jam"
+    }
+  },
+  {
+    "name": "Laptop Dell Inspiron 14 5440",
+    "category": "Laptop",
+    "price": 11299000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Intel Core 5 120U",
+      "ram": "16GB DDR5",
+      "storage": "512GB NVMe SSD",
+      "display": "14 inci FHD+ 16:10, lebih lega untuk multitasking",
+      "gpu": "Intel Graphics",
+      "weight": "1.61 kg",
+      "battery": "54Wh, charging cepat 80% dalam 1 jam"
+    }
+  },
+  {
+    "name": "Laptop Lenovo Legion 5 15ARP9 Gaming",
+    "category": "Laptop",
+    "price": 19999000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "AMD Ryzen 7 7435HS",
+      "ram": "16GB DDR5 5600MHz",
+      "storage": "1TB NVMe SSD, lega untuk banyak game",
+      "display": "15.6 inci FHD 144Hz 100% sRGB",
+      "gpu": "NVIDIA GeForce RTX 4060 8GB",
+      "weight": "2.38 kg",
+      "battery": "60Wh",
+      "fitur": "Legion Coldfront 5.0, keyboard 4-zone RGB"
+    }
+  },
+  {
+    "name": "Laptop Axioo MyBook Hype 5",
+    "category": "Laptop",
+    "price": 4999000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Intel Core i5-1035G1",
+      "ram": "8GB DDR4",
+      "storage": "256GB SSD",
+      "display": "14 inci FHD IPS",
+      "gpu": "Intel UHD Graphics",
+      "weight": "1.35 kg",
+      "battery": "38Wh, cocok untuk pelajar dengan budget hemat"
+    }
+  },
+  {
+    "name": "Laptop ASUS Zenbook 14 OLED UX3405",
+    "category": "Laptop",
+    "price": 16999000,
+    "imageUrl": "",
+    "specs": {
+      "processor": "Intel Core Ultra 5 125H dengan AI engine",
+      "ram": "16GB LPDDR5X",
+      "storage": "512GB NVMe SSD",
+      "display": "14 inci 3K OLED 120Hz, warna sangat memukau",
+      "gpu": "Intel Arc Graphics",
+      "weight": "1.22 kg",
+      "battery": "75Wh, hingga 15 jam"
+    }
+  },
+  {
+    "name": "Samsung Galaxy A55 5G",
+    "category": "Smartphone",
+    "price": 5999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Exynos 1480",
+      "ram": "8GB",
+      "storage": "256GB",
+      "display": "6.6 inci Super AMOLED 120Hz, cerah di luar ruangan",
+      "camera": "50MP OIS + 12MP ultrawide + 5MP makro",
+      "battery": "5000mAh, 25W fast charging, cukup untuk seharian"
+    }
+  },
+  {
+    "name": "Xiaomi Redmi Note 13 Pro",
+    "category": "Smartphone",
+    "price": 3899000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 7s Gen 2",
+      "ram": "8GB, bisa ditambah virtual RAM",
+      "storage": "256GB",
+      "display": "6.67 inci AMOLED 120Hz",
+      "camera": "200MP OIS, detail foto sangat tinggi di kelasnya",
+      "battery": "5100mAh, 67W turbo charge, penuh dalam 45 menit"
+    }
+  },
+  {
+    "name": "Apple iPhone 16",
+    "category": "Smartphone",
+    "price": 15999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Apple A18",
+      "ram": "8GB",
+      "storage": "128GB",
+      "display": "6.1 inci Super Retina XDR OLED",
+      "camera": "48MP Fusion + 12MP ultrawide, hasil foto natural",
+      "battery": "3561mAh, hingga 22 jam pemutaran video",
+      "fitur": "Camera Control, Action Button, iOS 18"
+    }
+  },
+  {
+    "name": "Apple iPhone 16 Pro Max",
+    "category": "Smartphone",
+    "price": 24999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Apple A18 Pro, chip smartphone terkencang",
+      "ram": "8GB",
+      "storage": "256GB",
+      "display": "6.9 inci Super Retina XDR 120Hz ProMotion",
+      "camera": "48MP Fusion + 48MP ultrawide + 12MP telefoto 5x",
+      "battery": "4685mAh, hingga 33 jam pemutaran video",
+      "material": "Rangka titanium, kuat dan ringan"
+    }
+  },
+  {
+    "name": "Samsung Galaxy S24 Ultra",
+    "category": "Smartphone",
+    "price": 19999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 8 Gen 3 for Galaxy",
+      "ram": "12GB",
+      "storage": "256GB",
+      "display": "6.8 inci Dynamic AMOLED 2X 120Hz, sangat terang 2600 nits",
+      "camera": "200MP OIS + 50MP telefoto 5x + 10MP telefoto 3x + 12MP ultrawide",
+      "battery": "5000mAh, 45W fast charging",
+      "fitur": "S Pen bawaan, Galaxy AI, rangka titanium"
+    }
+  },
+  {
+    "name": "OPPO Reno12 F 5G",
+    "category": "Smartphone",
+    "price": 3699000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "MediaTek Dimensity 6300",
+      "ram": "8GB + 8GB extended RAM",
+      "storage": "256GB",
+      "display": "6.67 inci AMOLED 120Hz",
+      "camera": "50MP utama + 8MP ultrawide + 2MP makro",
+      "battery": "5000mAh, 45W SUPERVOOC"
+    }
+  },
+  {
+    "name": "Infinix Note 40 Pro",
+    "category": "Smartphone",
+    "price": 2899000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "MediaTek Helio G99 Ultimate",
+      "ram": "8GB + 8GB extended RAM",
+      "storage": "256GB",
+      "display": "6.78 inci AMOLED 120Hz",
+      "camera": "108MP OIS + 2MP makro",
+      "battery": "5000mAh, 70W fast charging + 20W wireless, harga sangat bersahabat"
+    }
+  },
+  {
+    "name": "vivo V40 5G",
+    "category": "Smartphone",
+    "price": 6499000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 7 Gen 3",
+      "ram": "12GB",
+      "storage": "256GB",
+      "display": "6.78 inci AMOLED 120Hz lengkung",
+      "camera": "50MP ZEISS OIS + 50MP ultrawide, andalan untuk portrait",
+      "battery": "5500mAh, 80W flash charge",
+      "fitur": "Tahan air IP68, kamera selfie 50MP"
+    }
+  },
+  {
+    "name": "Samsung Galaxy A16 5G",
+    "category": "Smartphone",
+    "price": 2799000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "MediaTek Dimensity 6300",
+      "ram": "8GB",
+      "storage": "128GB, ada slot microSD",
+      "display": "6.7 inci Super AMOLED 90Hz",
+      "camera": "50MP + 5MP ultrawide + 2MP makro",
+      "battery": "5000mAh, 25W, awet untuk pemakaian seharian",
+      "fitur": "Jaminan update OS 6 generasi"
+    }
+  },
+  {
+    "name": "Google Pixel 9",
+    "category": "Smartphone",
+    "price": 13999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Google Tensor G4",
+      "ram": "12GB",
+      "storage": "256GB",
+      "display": "6.3 inci Actua OLED 120Hz",
+      "camera": "50MP + 48MP ultrawide, komputasi foto terbaik dengan AI",
+      "battery": "4700mAh, 45W",
+      "fitur": "Gemini AI bawaan, update OS 7 tahun"
+    }
+  },
+  {
+    "name": "Apple iPad 10th Gen WiFi 64GB",
+    "category": "Tablet",
+    "price": 6499000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Apple A14 Bionic",
+      "ram": "4GB",
+      "storage": "64GB",
+      "display": "10.9 inci Liquid Retina",
+      "battery": "Hingga 10 jam, cocok untuk belajar dan hiburan",
+      "stylus": "Mendukung Apple Pencil generasi 1 dan USB-C"
+    }
+  },
+  {
+    "name": "Apple iPad Air 11 M2 WiFi 128GB",
+    "category": "Tablet",
+    "price": 10999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Apple M2, bertenaga seperti laptop",
+      "ram": "8GB",
+      "storage": "128GB",
+      "display": "11 inci Liquid Retina",
+      "battery": "Hingga 10 jam",
+      "stylus": "Mendukung Apple Pencil Pro",
+      "fitur": "Touch ID, Center Stage camera"
+    }
+  },
+  {
+    "name": "Apple iPad Pro 13 M4 WiFi 256GB",
+    "category": "Tablet",
+    "price": 23499000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Apple M4, performa kelas workstation",
+      "ram": "8GB",
+      "storage": "256GB",
+      "display": "13 inci Ultra Retina XDR OLED 120Hz, layar tablet terbaik",
+      "battery": "Hingga 10 jam",
+      "stylus": "Mendukung Apple Pencil Pro",
+      "fitur": "Face ID, bodi sangat tipis 5.1mm"
+    }
+  },
+  {
+    "name": "Samsung Galaxy Tab S9 FE WiFi",
+    "category": "Tablet",
+    "price": 5999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Exynos 1380",
+      "ram": "6GB",
+      "storage": "128GB, ada slot microSD",
+      "display": "10.9 inci LCD 90Hz",
+      "battery": "8000mAh, 45W fast charging",
+      "stylus": "S Pen sudah termasuk dalam paket",
+      "fitur": "Tahan air IP68"
+    }
+  },
+  {
+    "name": "Samsung Galaxy Tab S10+ 5G",
+    "category": "Tablet",
+    "price": 16999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "MediaTek Dimensity 9300+",
+      "ram": "12GB",
+      "storage": "256GB",
+      "display": "12.4 inci Dynamic AMOLED 2X 120Hz anti reflektif",
+      "battery": "10090mAh, 45W",
+      "stylus": "S Pen termasuk",
+      "fitur": "Galaxy AI, tahan air IP68"
+    }
+  },
+  {
+    "name": "Xiaomi Pad 6",
+    "category": "Tablet",
+    "price": 4499000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 870",
+      "ram": "8GB",
+      "storage": "256GB",
+      "display": "11 inci IPS 144Hz 2.8K",
+      "battery": "8840mAh, 33W",
+      "stylus": "Mendukung Xiaomi Smart Pen gen 2 (dijual terpisah)",
+      "fitur": "Quad speaker Dolby Atmos, value terbaik di kelasnya"
+    }
+  },
+  {
+    "name": "Xiaomi Redmi Pad SE",
+    "category": "Tablet",
+    "price": 2199000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 680",
+      "ram": "6GB",
+      "storage": "128GB",
+      "display": "11 inci FHD+ 90Hz",
+      "battery": "8000mAh, awet untuk nonton berjam-jam",
+      "fitur": "Quad speaker Dolby Atmos, harga sangat terjangkau"
+    }
+  },
+  {
+    "name": "Lenovo Tab P12",
+    "category": "Tablet",
+    "price": 5499000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "MediaTek Dimensity 7050",
+      "ram": "8GB",
+      "storage": "128GB",
+      "display": "12.7 inci 3K LCD",
+      "battery": "10200mAh, tahan hingga 13 jam video",
+      "stylus": "Lenovo Tab Pen Plus termasuk",
+      "fitur": "Quad speaker JBL Dolby Atmos"
+    }
+  },
+  {
+    "name": "HUAWEI MatePad 11.5 S",
+    "category": "Tablet",
+    "price": 5799000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Kirin 9000WL",
+      "ram": "8GB",
+      "storage": "256GB",
+      "display": "11.5 inci PaperMatte 144Hz, nyaman untuk mata saat membaca",
+      "battery": "8800mAh, 40W",
+      "stylus": "Mendukung M-Pencil gen 3",
+      "fitur": "GoPaint, cocok untuk menggambar digital"
+    }
+  },
+  {
+    "name": "Samsung Galaxy Tab A9+ WiFi",
+    "category": "Tablet",
+    "price": 2999000,
+    "imageUrl": "",
+    "specs": {
+      "chipset": "Snapdragon 695",
+      "ram": "8GB",
+      "storage": "128GB, ada slot microSD",
+      "display": "11 inci LCD 90Hz",
+      "battery": "7040mAh",
+      "fitur": "Quad speaker Dolby Atmos, tablet keluarga hemat"
+    }
+  },
+  {
+    "name": "Monitor LG 24MR400 24 inci",
+    "category": "Monitor",
+    "price": 1349000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "24 inci",
+      "panel": "IPS, sudut pandang luas",
+      "resolusi": "1920x1080 Full HD",
+      "refresh_rate": "100Hz",
+      "port": "HDMI, D-Sub",
+      "fitur": "AMD FreeSync, Reader Mode nyaman di mata"
+    }
+  },
+  {
+    "name": "Monitor Samsung Odyssey G4 25 inci",
+    "category": "Monitor",
+    "price": 3499000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "25 inci",
+      "panel": "IPS",
+      "resolusi": "1920x1080 Full HD",
+      "refresh_rate": "240Hz, sangat mulus untuk game kompetitif",
+      "port": "2x HDMI 2.0, DisplayPort 1.4",
+      "fitur": "G-Sync compatible, FreeSync Premium, 1ms GtG"
+    }
+  },
+  {
+    "name": "Monitor ASUS ProArt PA248QV 24 inci",
+    "category": "Monitor",
+    "price": 3899000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "24.1 inci",
+      "panel": "IPS, 100% sRGB dan Rec.709, akurasi warna untuk desainer",
+      "resolusi": "1920x1200 WUXGA 16:10",
+      "refresh_rate": "75Hz",
+      "port": "HDMI, DisplayPort, D-Sub, hub USB",
+      "fitur": "Calman Verified, ergonomis full adjustment"
+    }
+  },
+  {
+    "name": "Monitor Xiaomi A24i 24 inci",
+    "category": "Monitor",
+    "price": 899000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "23.8 inci",
+      "panel": "IPS",
+      "resolusi": "1920x1080 Full HD",
+      "refresh_rate": "100Hz",
+      "port": "HDMI, VGA",
+      "fitur": "Low blue light, monitor entry level paling hemat"
+    }
+  },
+  {
+    "name": "Monitor Dell UltraSharp U2723QE 27 inci 4K",
+    "category": "Monitor",
+    "price": 9999000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "27 inci",
+      "panel": "IPS Black, kontras 2000:1",
+      "resolusi": "3840x2160 4K UHD",
+      "refresh_rate": "60Hz",
+      "port": "USB-C 90W power delivery, HDMI, DisplayPort, hub USB + LAN",
+      "fitur": "Cocok untuk profesional, satu kabel USB-C ke laptop"
+    }
+  },
+  {
+    "name": "Monitor LG UltraGear 27GS75Q 27 inci QHD",
+    "category": "Monitor",
+    "price": 4799000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "27 inci",
+      "panel": "IPS",
+      "resolusi": "2560x1440 QHD",
+      "refresh_rate": "180Hz",
+      "port": "2x HDMI, DisplayPort",
+      "fitur": "1ms GtG, HDR10, G-Sync compatible, favorit gamer QHD"
+    }
+  },
+  {
+    "name": "Monitor Samsung ViewFinity S6 32 inci",
+    "category": "Monitor",
+    "price": 6499000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "32 inci",
+      "panel": "VA",
+      "resolusi": "2560x1440 QHD",
+      "refresh_rate": "75Hz",
+      "port": "USB-C 90W, HDMI, DisplayPort, LAN",
+      "fitur": "Layar lega untuk multitasking kantor, eye saver mode"
+    }
+  },
+  {
+    "name": "Monitor AOC 24G4 24 inci Gaming",
+    "category": "Monitor",
+    "price": 1999000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "23.8 inci",
+      "panel": "Fast IPS",
+      "resolusi": "1920x1080 Full HD",
+      "refresh_rate": "180Hz",
+      "port": "2x HDMI, DisplayPort",
+      "fitur": "1ms GtG, HDR10, gaming murah performa tinggi"
+    }
+  },
+  {
+    "name": "Monitor MSI MAG 274UPF 27 inci 4K Gaming",
+    "category": "Monitor",
+    "price": 8299000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "27 inci",
+      "panel": "Rapid IPS",
+      "resolusi": "3840x2160 4K UHD",
+      "refresh_rate": "144Hz, 4K gaming mulus untuk PS5 dan PC",
+      "port": "HDMI 2.1 x2, DisplayPort 1.4, USB-C DP",
+      "fitur": "1ms GtG, HDR400, KVM switch"
+    }
+  },
+  {
+    "name": "Monitor Portable ARZOPA A1 15.6 inci",
+    "category": "Monitor",
+    "price": 1499000,
+    "imageUrl": "",
+    "specs": {
+      "ukuran": "15.6 inci",
+      "panel": "IPS",
+      "resolusi": "1920x1080 Full HD",
+      "refresh_rate": "60Hz",
+      "port": "2x USB-C full function, mini HDMI",
+      "fitur": "Portable hanya 700 gram, layar kedua untuk laptop di mana saja"
+    }
+  },
+  {
+    "name": "Apple AirPods Pro 2 USB-C",
+    "category": "Aksesoris",
+    "price": 3799000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "TWS earbuds in-ear",
+      "konektivitas": "Bluetooth 5.3, chip Apple H2",
+      "kompatibilitas": "Terbaik dengan iPhone/iPad/Mac, bisa untuk Android",
+      "fitur": "Noise cancelling 2x lebih kuat, Adaptive Audio, Spatial Audio",
+      "baterai": "6 jam per charge, total 30 jam dengan case",
+      "ketahanan": "IP54 tahan keringat dan debu"
+    }
+  },
+  {
+    "name": "Samsung Galaxy Buds3 Pro",
+    "category": "Aksesoris",
+    "price": 3299000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "TWS earbuds in-ear",
+      "konektivitas": "Bluetooth 5.4",
+      "kompatibilitas": "Optimal dengan Galaxy, mendukung semua Android dan iOS",
+      "fitur": "ANC adaptif, Galaxy AI interpreter, 360 Audio",
+      "baterai": "6 jam per charge, total 26 jam dengan case",
+      "ketahanan": "IP57"
+    }
+  },
+  {
+    "name": "Logitech MX Master 3S Mouse Wireless",
+    "category": "Aksesoris",
+    "price": 1599000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Mouse wireless ergonomis premium",
+      "konektivitas": "Bluetooth + Logi Bolt USB receiver, bisa 3 perangkat",
+      "kompatibilitas": "Windows, macOS, Linux, iPadOS",
+      "fitur": "Scroll MagSpeed elektromagnetik, klik senyap, 8000 DPI",
+      "baterai": "70 hari per charge, USB-C quick charge"
+    }
+  },
+  {
+    "name": "Keychron K2 V2 Keyboard Mechanical Wireless",
+    "category": "Aksesoris",
+    "price": 1299000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Keyboard mechanical 75% layout",
+      "konektivitas": "Bluetooth 5.1 hingga 3 perangkat + kabel USB-C",
+      "kompatibilitas": "Windows dan macOS, ada keycap khusus Mac",
+      "fitur": "Hot-swappable switch Gateron, backlight RGB",
+      "baterai": "4000mAh, hingga 72 jam dengan backlight menyala"
+    }
+  },
+  {
+    "name": "Anker PowerCore 20000mAh 30W Power Bank",
+    "category": "Aksesoris",
+    "price": 599000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Power bank kapasitas besar",
+      "konektivitas": "USB-C in/out 30W PD, 2x USB-A",
+      "kompatibilitas": "Semua smartphone, tablet, dan earbuds",
+      "fitur": "Bisa mengecas 3 perangkat sekaligus, trickle mode untuk aksesori kecil",
+      "baterai": "20000mAh, cukup mengecas iPhone sekitar 4 kali penuh"
+    }
+  },
+  {
+    "name": "Baseus GaN5 Pro 65W Charger",
+    "category": "Aksesoris",
+    "price": 349000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Charger dinding GaN 65W",
+      "konektivitas": "2x USB-C PD + 1x USB-A",
+      "kompatibilitas": "Laptop USB-C, MacBook, smartphone, tablet",
+      "fitur": "Teknologi GaN lebih kecil dan dingin, bisa 3 perangkat sekaligus",
+      "keamanan": "Proteksi overheat, overcurrent, dan short circuit"
+    }
+  },
+  {
+    "name": "SanDisk Extreme Portable SSD 1TB",
+    "category": "Aksesoris",
+    "price": 1699000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "SSD eksternal portable",
+      "konektivitas": "USB-C 3.2 Gen 2, kecepatan baca hingga 1050MB/s",
+      "kompatibilitas": "Windows, macOS, Android, iPad, PS5",
+      "fitur": "Tahan jatuh 3 meter, IP65 tahan air dan debu",
+      "kapasitas": "1TB, muat ribuan foto dan video 4K"
+    }
+  },
+  {
+    "name": "Sony WH-1000XM5 Headphone Wireless",
+    "category": "Aksesoris",
+    "price": 4999000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Headphone over-ear premium",
+      "konektivitas": "Bluetooth 5.2 multipoint, LDAC hi-res audio",
+      "kompatibilitas": "Semua perangkat Bluetooth, aplikasi iOS dan Android",
+      "fitur": "Noise cancelling terbaik di kelasnya dengan 8 mikrofon",
+      "baterai": "30 jam dengan ANC, quick charge 3 menit untuk 3 jam"
+    }
+  },
+  {
+    "name": "Ugreen Revodok Pro USB-C Hub 9-in-1",
+    "category": "Aksesoris",
+    "price": 549000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "USB-C hub / docking station",
+      "konektivitas": "HDMI 4K@60Hz, 3x USB-A 3.0, USB-C PD 100W, LAN Gigabit, SD/microSD",
+      "kompatibilitas": "MacBook, laptop Windows USB-C, iPad Pro",
+      "fitur": "Satu port jadi sembilan, bodi aluminium dingin",
+      "garansi": "24 bulan resmi"
+    }
+  },
+  {
+    "name": "Apple Watch Series 10 46mm GPS",
+    "category": "Aksesoris",
+    "price": 6999000,
+    "imageUrl": "",
+    "specs": {
+      "tipe": "Smartwatch",
+      "konektivitas": "Bluetooth 5.3, WiFi, GPS presisi",
+      "kompatibilitas": "Khusus iPhone (iOS 18 ke atas)",
+      "fitur": "EKG, SpO2, deteksi sleep apnea, layar Always-On terluas",
+      "baterai": "18 jam pemakaian normal, fast charge 80% dalam 30 menit",
+      "ketahanan": "Tahan air 50 meter"
+    }
+  }
+]
