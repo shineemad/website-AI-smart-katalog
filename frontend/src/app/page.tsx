@@ -5,6 +5,8 @@ import Image from "next/image";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import {
+  CaretLeft,
+  CaretRight,
   ChatCircleDots,
   DeviceMobile,
   DeviceTablet,
@@ -20,7 +22,13 @@ import { Reveal } from "@/components/reveal";
 import { RotatingWord } from "@/components/rotating-word";
 import { AiText } from "@/components/ai-text";
 import { ProductCard, ProductCardSkeleton } from "@/components/product-card";
-import { api, ApiError, Product, ProductListResponse } from "@/lib/api";
+import {
+  api,
+  ApiError,
+  mediaUrl,
+  Product,
+  ProductListResponse,
+} from "@/lib/api";
 
 const CATEGORIES = ["Laptop", "Smartphone", "Tablet", "Monitor", "Aksesoris"];
 
@@ -520,19 +528,29 @@ function CategoryTiles() {
   const [images, setImages] = useState<Record<string, string>>({});
 
   useEffect(() => {
-    api
-      .listProducts({ limit: 50 })
-      .then((res) => {
-        const c: Record<string, number> = {};
-        const im: Record<string, string> = {};
-        res.data.forEach((p) => {
-          c[p.category] = (c[p.category] ?? 0) + 1;
-          if (!im[p.category] && p.imageUrl) im[p.category] = p.imageUrl;
-        });
-        setCounts(c);
-        setImages(im);
-      })
-      .catch(() => setCounts({}));
+    // Hitung per kategori dari meta.total agar akurat berapapun jumlah produk
+    const categories = Object.keys(CATEGORY_ICONS);
+    Promise.all(
+      categories.map((cat) =>
+        api
+          .listProducts({ category: cat, limit: 1 })
+          .then((res) => ({
+            cat,
+            total: res.meta.total,
+            image: res.data[0]?.imageUrl ?? "",
+          }))
+          .catch(() => ({ cat, total: 0, image: "" })),
+      ),
+    ).then((rows) => {
+      const c: Record<string, number> = {};
+      const im: Record<string, string> = {};
+      rows.forEach((r) => {
+        c[r.cat] = r.total;
+        if (r.image) im[r.cat] = r.image;
+      });
+      setCounts(c);
+      setImages(im);
+    });
   }, []);
 
   /* GSAP: entrance stagger baris indeks + count-up angka produk saat
@@ -713,7 +731,7 @@ function CategoryTiles() {
                     {images[t.name] ? (
                       /* eslint-disable-next-line @next/next/no-img-element */
                       <img
-                        src={images[t.name]}
+                        src={mediaUrl(images[t.name])}
                         alt={`Produk ${t.name}`}
                         className="h-full w-full object-contain"
                         loading="lazy"
@@ -1056,6 +1074,20 @@ function Faq() {
 
 /* ---------------- Katalog + filter + pagination ---------------- */
 
+/** Jendela nomor halaman terkondensasi: selalu maks 7 item (1 … 45 46 47 … 92). */
+function pageItems(current: number, total: number): (number | "...")[] {
+  if (total <= 7) {
+    return Array.from({ length: total }, (_, i) => i + 1);
+  }
+  if (current <= 4) {
+    return [1, 2, 3, 4, 5, "...", total];
+  }
+  if (current >= total - 3) {
+    return [1, "...", total - 4, total - 3, total - 2, total - 1, total];
+  }
+  return [1, "...", current - 1, current, current + 1, "...", total];
+}
+
 const PRICE_RANGES = [
   { label: "Semua harga", min: undefined, max: undefined },
   { label: "Di bawah Rp 2 jt", min: undefined, max: 2_000_000 },
@@ -1283,21 +1315,61 @@ function Catalog() {
         )}
 
         {!loading && data && totalPages > 1 && (
-          <div className="mt-10 flex items-center justify-center gap-2">
-            {Array.from({ length: totalPages }, (_, i) => i + 1).map((n) => (
-              <button
-                key={n}
-                onClick={() => setPage(n)}
-                className={`h-10 w-10 rounded-md2 font-mono text-sm tabular-nums transition-colors ${
-                  n === page
-                    ? "bg-blue-deep text-white"
-                    : "border border-lavender bg-white text-gray2 hover:border-blue-deep hover:text-blue-deep"
-                }`}
-              >
-                {n}
-              </button>
-            ))}
-          </div>
+          <nav
+            aria-label="Navigasi halaman katalog"
+            className="mt-10 flex items-center justify-center gap-1.5 sm:gap-2"
+          >
+            <button
+              onClick={() => setPage(page - 1)}
+              disabled={page === 1}
+              aria-label="Halaman sebelumnya"
+              className="flex h-10 w-10 items-center justify-center rounded-md2 border border-lavender bg-white text-gray2 transition-colors hover:border-blue-deep hover:text-blue-deep disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-lavender disabled:hover:text-gray2"
+            >
+              <CaretLeft size={16} weight="bold" />
+            </button>
+
+            {/* Mobile: indikator ringkas, tanpa deretan nomor */}
+            <span className="px-3 font-mono text-sm tabular-nums text-gray2 sm:hidden">
+              {page} / {totalPages}
+            </span>
+
+            {/* ≥sm: jendela nomor terkondensasi */}
+            <div className="hidden items-center gap-2 sm:flex">
+              {pageItems(page, totalPages).map((item, i) =>
+                item === "..." ? (
+                  <span
+                    key={`gap-${i}`}
+                    aria-hidden
+                    className="w-6 text-center font-mono text-sm text-gray-faint"
+                  >
+                    …
+                  </span>
+                ) : (
+                  <button
+                    key={item}
+                    onClick={() => setPage(item)}
+                    aria-current={item === page ? "page" : undefined}
+                    className={`h-10 min-w-10 rounded-md2 px-2 font-mono text-sm tabular-nums transition-colors ${
+                      item === page
+                        ? "bg-blue-deep text-white"
+                        : "border border-lavender bg-white text-gray2 hover:border-blue-deep hover:text-blue-deep"
+                    }`}
+                  >
+                    {item}
+                  </button>
+                ),
+              )}
+            </div>
+
+            <button
+              onClick={() => setPage(page + 1)}
+              disabled={page === totalPages}
+              aria-label="Halaman berikutnya"
+              className="flex h-10 w-10 items-center justify-center rounded-md2 border border-lavender bg-white text-gray2 transition-colors hover:border-blue-deep hover:text-blue-deep disabled:cursor-not-allowed disabled:opacity-35 disabled:hover:border-lavender disabled:hover:text-gray2"
+            >
+              <CaretRight size={16} weight="bold" />
+            </button>
+          </nav>
         )}
       </div>
     </section>

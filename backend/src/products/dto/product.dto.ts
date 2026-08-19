@@ -92,4 +92,12 @@ export class QueryProductsDto {
   @Min(1)
   @Max(50)
   limit?: number = 12;
+
+  @ApiPropertyOptional({
+    description: "Set 1 untuk melewati Redis cache (untuk benchmark)",
+    example: 0,
+  })
+  @IsOptional()
+  @Transform(({ value }) => value === "1" || value === "true" || value === true)
+  nocache?: boolean;
 }

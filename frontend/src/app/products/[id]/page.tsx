@@ -7,7 +7,7 @@ import { useParams } from "next/navigation";
 import { Navbar } from "@/components/navbar";
 import { Footer } from "@/components/footer";
 import { ChatWidget } from "@/components/chat-widget";
-import { api, formatRupiah, Product } from "@/lib/api";
+import { api, formatRupiah, mediaUrl, Product } from "@/lib/api";
 
 export default function ProductDetailPage() {
   const { id } = useParams<{ id: string }>();
@@ -67,7 +67,7 @@ export default function ProductDetailPage() {
                 <div className="overflow-hidden rounded-lg2 border border-lavender bg-bg-soft">
                   {product.imageUrl ? (
                     <img
-                      src={product.imageUrl}
+                      src={mediaUrl(product.imageUrl)}
                       alt={product.name}
                       className="aspect-[4/3] h-auto w-full object-cover"
                     />

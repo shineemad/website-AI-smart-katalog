@@ -5,6 +5,7 @@ import {
 } from "@nestjs/common";
 import { InjectModel } from "@nestjs/mongoose";
 import { FilterQuery, Model, isValidObjectId } from "mongoose";
+import { CacheService } from "../cache/cache.service";
 import { StorageService } from "../storage/storage.service";
 import {
   CreateProductDto,
@@ -43,18 +44,31 @@ export function validateImage(file?: Express.Multer.File) {
   }
 }
 
+const CACHE_PREFIX = "products:";
+const CACHE_TTL_SECONDS = 60;
+
 @Injectable()
 export class ProductsService {
   constructor(
     @InjectModel(Product.name)
     private readonly productModel: Model<ProductDocument>,
     private readonly storage: StorageService,
+    private readonly cache: CacheService,
   ) {}
 
   async findAll(query: QueryProductsDto) {
     const filter = buildProductFilter(query);
     const page = query.page ?? 1;
     const limit = query.limit ?? 12;
+
+    const cacheKey = `${CACHE_PREFIX}list:${query.category ?? ""}:${query.minPrice ?? ""}:${query.maxPrice ?? ""}:${page}:${limit}`;
+    if (!query.nocache) {
+      const cached = await this.cache.get<{ data: unknown; meta: unknown }>(
+        cacheKey,
+      );
+      if (cached) return cached;
+    }
+
     const [data, total] = await Promise.all([
       this.productModel
         .find(filter)
@@ -64,14 +78,23 @@ export class ProductsService {
         .lean(),
       this.productModel.countDocuments(filter),
     ]);
-    return { data, meta: { total, page, limit } };
+    const result = { data, meta: { total, page, limit } };
+    if (!query.nocache) {
+      await this.cache.set(cacheKey, result, CACHE_TTL_SECONDS);
+    }
+    return result;
   }
 
   async findOne(id: string) {
+    const cacheKey = `${CACHE_PREFIX}id:${id}`;
+    const cached = await this.cache.get<Product>(cacheKey);
+    if (cached) return cached;
+
     const product = isValidObjectId(id)
       ? await this.productModel.findById(id).lean()
       : null;
     if (!product) throw new NotFoundException("Product not found");
+    await this.cache.set(cacheKey, product, CACHE_TTL_SECONDS);
     return product;
   }
 
@@ -86,13 +109,15 @@ export class ProductsService {
       );
       imageUrl = uploaded.url;
     }
-    return this.productModel.create({
+    const created = await this.productModel.create({
       name: dto.name,
       category: dto.category,
       price: dto.price,
       specs: dto.specs,
       imageUrl,
     });
+    await this.cache.delByPrefix(CACHE_PREFIX);
+    return created;
   }
 
   async update(id: string, dto: UpdateProductDto, file?: Express.Multer.File) {
@@ -116,7 +141,9 @@ export class ProductsService {
     if (dto.price !== undefined) product.price = dto.price;
     if (dto.specs !== undefined)
       product.specs = dto.specs as Record<string, unknown>;
-    return product.save();
+    const saved = await product.save();
+    await this.cache.delByPrefix(CACHE_PREFIX);
+    return saved;
   }
 
   async remove(id: string) {
@@ -125,6 +152,7 @@ export class ProductsService {
       : null;
     if (!product) throw new NotFoundException("Product not found");
     if (product.imageUrl) await this.storage.delete(product.imageUrl);
+    await this.cache.delByPrefix(CACHE_PREFIX);
     return { success: true, message: "Produk dihapus" };
   }
 }

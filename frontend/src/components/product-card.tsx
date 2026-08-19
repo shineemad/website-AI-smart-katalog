@@ -1,6 +1,6 @@
 import Link from "next/link";
 /* eslint-disable @next/next/no-img-element */
-import { Product, formatRupiah } from "@/lib/api";
+import { Product, formatRupiah, mediaUrl } from "@/lib/api";
 
 /**
  * Kartu produk pola storefront: gambar di area terang, nama 2 baris,
@@ -16,7 +16,7 @@ export function ProductCard({ product }: { product: Product }) {
         <div className="flex aspect-square items-center justify-center overflow-hidden rounded-md2 bg-bg-soft/60">
           {product.imageUrl ? (
             <img
-              src={product.imageUrl}
+              src={mediaUrl(product.imageUrl)}
               alt={product.name}
               className="h-full w-full object-contain transition-transform duration-300 group-hover:scale-[1.04]"
               loading="lazy"

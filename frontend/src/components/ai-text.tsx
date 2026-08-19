@@ -9,8 +9,9 @@ import { Fragment } from "react";
 
 function renderInline(text: string): React.ReactNode[] {
   const nodes: React.ReactNode[] = [];
-  /* Tangkap **bold** lebih dulu, lalu *italic* */
-  const pattern = /\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*/g;
+  /* Tangkap ***bold-italic***, lalu **bold**, *italic*, dan `kode` */
+  const pattern =
+    /\*\*\*([^*]+)\*\*\*|\*\*([^*]+)\*\*|\*([^*\s][^*]*)\*|`([^`]+)`/g;
   let cursor = 0;
   let match: RegExpExecArray | null;
   let key = 0;
@@ -24,8 +25,20 @@ function renderInline(text: string): React.ReactNode[] {
           {match[1]}
         </strong>,
       );
+    } else if (match[2] !== undefined) {
+      nodes.push(
+        <strong key={key++} className="font-semibold text-ink">
+          {match[2]}
+        </strong>,
+      );
+    } else if (match[3] !== undefined) {
+      nodes.push(<em key={key++}>{match[3]}</em>);
     } else {
-      nodes.push(<em key={key++}>{match[2]}</em>);
+      nodes.push(
+        <code key={key++} className="font-mono text-[0.9em]">
+          {match[4]}
+        </code>,
+      );
     }
     cursor = match.index + match[0].length;
   }
@@ -35,8 +48,10 @@ function renderInline(text: string): React.ReactNode[] {
 
 type Block =
   | { type: "paragraph"; lines: string[] }
+  | { type: "heading"; text: string }
   | { type: "ordered"; items: string[] }
   | { type: "bullet"; items: string[] }
+  | { type: "table"; rows: string[][] }
   | { type: "divider" };
 
 function parseBlocks(text: string): Block[] {
@@ -51,6 +66,25 @@ function parseBlocks(text: string): Block[] {
 
     if (/^(\*{3,}|-{3,}|_{3,})$/.test(line)) {
       blocks.push({ type: "divider" });
+      continue;
+    }
+
+    /* Heading markdown: ### Judul -> blok heading tanpa tanda # */
+    const heading = line.match(/^#{1,6}\s+(.*)$/);
+    if (heading) {
+      blocks.push({ type: "heading", text: heading[1] });
+      continue;
+    }
+
+    /* Baris tabel markdown: | a | b | -> kumpulkan sel; baris pemisah |---| dibuang */
+    if (/^\|.*\|$/.test(line)) {
+      if (/^\|[\s:|-]+\|$/.test(line)) continue;
+      const cells = line
+        .slice(1, -1)
+        .split("|")
+        .map((c) => c.trim());
+      if (last?.type === "table") last.rows.push(cells);
+      else blocks.push({ type: "table", rows: [cells] });
       continue;
     }
 
@@ -88,6 +122,48 @@ export function AiText({
       {blocks.map((block, i) => {
         if (block.type === "divider") {
           return <hr key={i} className="border-lavender" />;
+        }
+        if (block.type === "heading") {
+          return (
+            <p key={i} className="font-semibold text-ink">
+              {renderInline(block.text)}
+            </p>
+          );
+        }
+        if (block.type === "table") {
+          const [head, ...body] = block.rows;
+          return (
+            <div key={i} className="overflow-x-auto">
+              <table className="w-full border-collapse text-left text-xs">
+                <thead>
+                  <tr>
+                    {head.map((cell, j) => (
+                      <th
+                        key={j}
+                        className="border-b border-lavender py-1.5 pr-3 font-semibold text-ink"
+                      >
+                        {renderInline(cell)}
+                      </th>
+                    ))}
+                  </tr>
+                </thead>
+                <tbody>
+                  {body.map((row, j) => (
+                    <tr key={j}>
+                      {row.map((cell, k) => (
+                        <td
+                          key={k}
+                          className="border-b border-lavender/60 py-1.5 pr-3 align-top"
+                        >
+                          {renderInline(cell)}
+                        </td>
+                      ))}
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          );
         }
         if (block.type === "ordered") {
           return (

@@ -8,6 +8,7 @@ import { AiModule } from "./ai/ai.module";
 import { StorageModule } from "./storage/storage.module";
 import { SeedModule } from "./seed/seed.module";
 import { HealthModule } from "./health/health.module";
+import { CacheModule } from "./cache/cache.module";
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { HealthModule } from "./health/health.module";
     // Rate limit hanya diterapkan pada endpoint AI via @Throttle decorator;
     // default global dibuat longgar.
     ThrottlerModule.forRoot([{ name: "default", ttl: 60000, limit: 120 }]),
+    CacheModule,
     HealthModule,
     AuthModule,
     StorageModule,

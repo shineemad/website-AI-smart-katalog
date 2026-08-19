@@ -25,3 +25,8 @@ export class Product {
 }
 
 export const ProductSchema = SchemaFactory.createForClass(Product);
+
+// Index untuk pola query katalog: filter kategori + sort terbaru, range harga, dan pencarian teks.
+ProductSchema.index({ category: 1, createdAt: -1 });
+ProductSchema.index({ price: 1 });
+ProductSchema.index({ name: "text" });

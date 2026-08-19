@@ -14,7 +14,7 @@ import {
   Trash,
 } from "@phosphor-icons/react";
 import { LogoMark } from "@/components/logo";
-import { api, ApiError, formatRupiah, Product } from "@/lib/api";
+import { api, ApiError, formatRupiah, mediaUrl, Product } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 
 const CATEGORIES = ["Laptop", "Smartphone", "Tablet", "Monitor", "Aksesoris"];
@@ -269,7 +269,7 @@ function Dashboard() {
                 <div className="flex aspect-[4/3] items-center justify-center overflow-hidden rounded-md2 bg-bg-soft/60">
                   {p.imageUrl ? (
                     <img
-                      src={p.imageUrl}
+                      src={mediaUrl(p.imageUrl)}
                       alt={p.name}
                       className="h-full w-full object-contain"
                       loading="lazy"
@@ -368,7 +368,7 @@ function ProductFormModal({
   );
   const [file, setFile] = useState<File | null>(null);
   const [preview, setPreview] = useState<string | null>(
-    product?.imageUrl || null,
+    product?.imageUrl ? mediaUrl(product.imageUrl) : null,
   );
   const [specsError, setSpecsError] = useState<string | null>(null);
   const [error, setError] = useState<string | null>(null);

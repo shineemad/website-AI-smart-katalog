@@ -17,9 +17,10 @@ describe("buildProductChatPrompt", () => {
     expect(prompt).toContain("Kuat buat Docker?");
   });
 
-  it("menyertakan instruksi menolak pertanyaan di luar konteks", () => {
+  it("menyertakan instruksi menolak pertanyaan di luar topik elektronik", () => {
     const prompt = buildProductChatPrompt(product, "apa saja?");
-    expect(prompt).toContain("di luar konteks produk");
+    expect(prompt).toContain("tidak ada hubungannya dengan elektronik");
+    expect(prompt).toContain("pertanyaan UMUM seputar elektronik");
   });
 });
 

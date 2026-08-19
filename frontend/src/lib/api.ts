@@ -1,6 +1,13 @@
 const API_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/api/v1";
 
+/** Ubah URL MinIO absolut menjadi path proxy /media agar tidak terikat host localhost:9000 */
+export function mediaUrl(url: string): string {
+  if (!url) return url;
+  const match = url.match(/^https?:\/\/[^/]+\/(.+)$/);
+  return match ? `/media/${match[1]}` : url;
+}
+
 export interface Product {
   _id: string;
   name: string;
