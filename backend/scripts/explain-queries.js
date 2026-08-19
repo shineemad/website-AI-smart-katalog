@@ -4,7 +4,9 @@
  */
 const mongoose = require("mongoose");
 
-const URI = process.env.MONGODB_URI || "mongodb://localhost:27017/smartcatalog";
+const URI =
+  process.env.MONGODB_URI ||
+  "mongodb://localhost:27017/smartcatalog?directConnection=true";
 
 function summarize(label, explain) {
   const stats = explain.executionStats;

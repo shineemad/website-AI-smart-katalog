@@ -14,7 +14,9 @@ import { CacheModule } from "./cache/cache.module";
   imports: [
     ConfigModule.forRoot({ isGlobal: true }),
     MongooseModule.forRoot(
-      process.env.MONGODB_URI || "mongodb://localhost:27017/smartcatalog",
+      // directConnection: tulis/baca via primary; replikasi ke secondary ditangani rs0.
+      process.env.MONGODB_URI ||
+        "mongodb://localhost:27017/smartcatalog?directConnection=true",
     ),
     // Rate limit hanya diterapkan pada endpoint AI via @Throttle decorator;
     // default global dibuat longgar.
