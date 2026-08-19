@@ -23,6 +23,28 @@ export interface ProductListResponse {
   meta: { total: number; page: number; limit: number };
 }
 
+export interface ProductChangeEvent {
+  type: string; // insert | update | replace | delete
+  id: string;
+  product: Product | null;
+  at: string;
+}
+
+/** Berlangganan perubahan produk via SSE (Change Streams); return fungsi unsubscribe. */
+export function subscribeProductChanges(
+  onChange: (event: ProductChangeEvent) => void,
+): () => void {
+  const source = new EventSource(`${API_URL}/realtime/products`);
+  source.onmessage = (e) => {
+    try {
+      onChange(JSON.parse(e.data));
+    } catch {
+      /* abaikan payload tak valid */
+    }
+  };
+  return () => source.close();
+}
+
 export class ApiError extends Error {
   constructor(
     public status: number,

@@ -9,6 +9,7 @@ import { StorageModule } from "./storage/storage.module";
 import { SeedModule } from "./seed/seed.module";
 import { HealthModule } from "./health/health.module";
 import { CacheModule } from "./cache/cache.module";
+import { RealtimeModule } from "./realtime/realtime.module";
 
 @Module({
   imports: [
@@ -28,6 +29,7 @@ import { CacheModule } from "./cache/cache.module";
     ProductsModule,
     AiModule,
     SeedModule,
+    RealtimeModule,
   ],
 })
 export class AppModule {}

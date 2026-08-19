@@ -28,6 +28,7 @@ import {
   mediaUrl,
   Product,
   ProductListResponse,
+  subscribeProductChanges,
 } from "@/lib/api";
 
 const CATEGORIES = ["Laptop", "Smartphone", "Tablet", "Monitor", "Aksesoris"];
@@ -1129,6 +1130,9 @@ function Catalog() {
   useEffect(() => {
     load();
   }, [load]);
+
+  // Live update: muat ulang katalog saat produk berubah (SSE + MongoDB Change Streams)
+  useEffect(() => subscribeProductChanges(() => load()), [load]);
 
   // Terima pilihan kategori dari section CategoryTiles
   useEffect(() => {

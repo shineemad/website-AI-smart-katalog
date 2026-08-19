@@ -102,6 +102,7 @@ Semua variabel memiliki default untuk pengembangan lokal:
 | DELETE | `/api/v1/products/:id`      | Hapus produk (admin)                     |
 | POST   | `/api/v1/products/:id/chat` | Chat AI tentang produk                   |
 | POST   | `/api/v1/ai/search`         | Pencarian produk via AI                  |
+| GET    | `/api/v1/realtime/products` | SSE stream perubahan produk (real-time)  |
 | GET    | `/api/v1/health`            | Health check                             |
 
 Parameter khusus: `GET /api/v1/products?nocache=1` melewati Redis cache (dipakai untuk benchmark A/B).
@@ -191,6 +192,27 @@ Hasil analisis shard key (1.098 dokumen, 3 shard simulasi):
 | Hashed `tenantId`             | 141,4%      | Timpang saat tenant masih sedikit           |
 | **Compound `tenantId + _id`** | **4,6%**    | **Merata + query per-tenant targeted** ✔    |
 | Hashed `_id`                  | 4,7%        | Merata tapi query per-tenant scatter-gather |
+
+## Solusi Real-Time (Change Streams + SSE)
+
+Perubahan data produk disiarkan ke client secara real-time tanpa polling:
+
+1. **MongoDB Change Streams** — [backend/src/realtime/realtime.service.ts](backend/src/realtime/realtime.service.ts) memantau koleksi `products` via oplog replica set (prasyarat: rs0 yang sudah terpasang).
+2. **Server-Sent Events (SSE)** — endpoint `GET /api/v1/realtime/products` menyiarkan event `insert`/`update`/`delete` beserta dokumen lengkapnya ke semua client yang terhubung.
+3. **Konsistensi cache** — setiap event change stream juga menginvalidasi Redis cache, sehingga perubahan langsung terlihat bahkan untuk tulis langsung ke DB (out-of-band).
+4. **Frontend live update** — halaman katalog berlangganan via `EventSource` dan memuat ulang otomatis saat ada perubahan (tanpa refresh manual).
+
+Uji cepat:
+
+```bash
+# Terminal 1: dengarkan stream
+curl -N http://localhost:3001/api/v1/realtime/products
+
+# Terminal 2: picu perubahan langsung di DB
+docker exec smartcatalog-mongo mongosh smartcatalog --quiet \
+  --eval "db.products.updateOne({}, { \$set: { price: 12345678 } })"
+# Terminal 1 langsung menerima: data: {"type":"update","id":"...","product":{...}}
+```
 
 ## Testing
 
